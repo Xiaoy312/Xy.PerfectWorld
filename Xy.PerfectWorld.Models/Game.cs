@@ -40,6 +40,6 @@ namespace Xy.PerfectWorld.Models
 
     public enum GameStatus
     {
-        Offline = 1, LoggedIn = 2
+        Unknown = 0, Offline = 1, LoggedIn = 2
     }
 }

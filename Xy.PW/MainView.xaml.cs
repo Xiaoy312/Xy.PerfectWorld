@@ -31,7 +31,7 @@ namespace Xy.PW
         private void ShowSetting(object sender, RoutedEventArgs e)
         {
             var view = Application.Current.Windows.OfType<SettingView>().SingleOrDefault() ??
-                new SettingView() { DataContext = AppViewModel.SettingVM };
+                new SettingView() { DataContext = AppViewModel.Instance.SettingVM };
 
             view.Show();
         }

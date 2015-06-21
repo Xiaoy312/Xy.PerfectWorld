@@ -53,8 +53,7 @@ namespace Xy.PerfectWorld.Models
         public Pointer<int> ID { get { return LootBase + 0x010C; } }
         public Pointer<int> Type { get { return LootBase + 0x0110; } }
 
-        public Pointer<GroundItemType> Asd { get { return LootBase + 0x014C; } }
-        public Pointer<int> QWe2 { get { return LootBase + 0x0110; } }
+        public Pointer<CollectMethod> CollectMethod { get { return LootBase + 0x014C; } }
 
         public Pointer<float> RelativeDistance { get { return LootBase + 0x154; } }
         /// <summary>
@@ -79,12 +78,8 @@ namespace Xy.PerfectWorld.Models
         }
     }
 
-    public enum GroundItemType
-    {
-        Loot = 1, Resource = 2, Gold = 3
-    }
     public enum CollectMethod
     {
-        None = 0,
+        Loot = 1, Resource = 2, Gold = 3
     }
 }

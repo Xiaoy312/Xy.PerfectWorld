@@ -6,15 +6,18 @@
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  xmlns:local="clr-namespace:Xy.PW"
                  mc:Ignorable="d"
-                 Title="Setting">
+                 Title="Setting"
+                 x:Name="Setting">
     <mah:MetroContentControl>
         <mah:MetroAnimatedSingleRowTabControl>
             <TabItem Header="Client">
                 <DataGrid ItemsSource="{Binding RunningGames}"
-                          AutoGenerateColumns="False"
-                          CanUserDeleteRows="False">
+                          AutoGenerateColumns="False" IsReadOnly="True"
+                          SelectedValue="{Binding SelectedGame}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="PID" Binding="{Binding PID}" />
+                        <DataGridTextColumn Header="PID" Binding="{Binding Process.Id}" />
+                        <DataGridTextColumn Header="GameStatus" Binding="{Binding Status}" />
+                        <DataGridTextColumn Header="Player" Binding="{Binding Player}" />
                     </DataGrid.Columns>
                 </DataGrid>
             </TabItem>

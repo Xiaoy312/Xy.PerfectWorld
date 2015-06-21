@@ -10,56 +10,58 @@
                  SizeToContent="WidthAndHeight"
                  WindowStyle="ToolWindow"
                  Title="Xy.PW">
-  <mah:MetroWindow.RightWindowCommands>
-    <mah:WindowCommands>
-      <Button Click="ShowSetting">
-        <Rectangle Width="15" Height="15"
+    <mah:MetroWindow.RightWindowCommands>
+        <mah:WindowCommands>
+            <Button Click="ShowSetting">
+                <Rectangle Width="15" Height="15"
                    Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType=Button}}">
-          <Rectangle.OpacityMask>
-            <VisualBrush Stretch="Uniform"
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Uniform"
                          Visual="{StaticResource Setting}" />
-          </Rectangle.OpacityMask>
-        </Rectangle>
-      </Button>
-    </mah:WindowCommands>
-  </mah:MetroWindow.RightWindowCommands>
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Button>
+        </mah:WindowCommands>
+    </mah:MetroWindow.RightWindowCommands>
 
 
-  <mah:MetroContentControl>
-    <Grid>
-      <Grid.RowDefinitions>
-        <RowDefinition Height="Auto" />
-        <RowDefinition Height="Auto" />
-      </Grid.RowDefinitions>
+    <mah:MetroContentControl>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-      <StackPanel Grid.Row="0" Orientation="Horizontal">
-        <StackPanel.Resources>
-          <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
-            <Setter Property="Margin" Value="0 0 10 0" />
-          </Style>
-        </StackPanel.Resources>
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+                        <Setter Property="Margin" Value="0 0 10 0" />
+                    </Style>
+                </StackPanel.Resources>
 
-        <CheckBox>
-          <CheckBox.ToolTip>
-            <TextBlock>
-              <Run FontWeight="Bold">Auto-Combat</Run>
-              <LineBreak />
-              <Run>Automatically acquire target and attack it</Run>
-            </TextBlock>
-          </CheckBox.ToolTip>
-        </CheckBox>
-        <CheckBox Content="AL" />
-      </StackPanel>
+                <CheckBox Content="AC" IsChecked="{Binding AutoCombatEnabled}">
+                    <CheckBox.ToolTip>
+                        <TextBlock>
+                            <Run FontWeight="Bold">Auto-Combat</Run>
+                            <LineBreak />
+                            <Run>Automatically acquire target and attack it</Run>
+                        </TextBlock>
+                    </CheckBox.ToolTip>
+                </CheckBox>
+                <CheckBox Content="AL" IsChecked="{Binding AutoCombatEnabled}">
 
-      <StatusBar Grid.Row="1">
-        <StatusBar.Resources>
-          <Style TargetType="StatusBarItem" BasedOn="{StaticResource {x:Type StatusBarItem}}">
-            <Setter Property="FontSize" Value="10" />
-          </Style>
-        </StatusBar.Resources>
-        <StatusBarItem Content="Target:" />
-        <StatusBarItem Content="12,123,123,123" />
-      </StatusBar>
-    </Grid>
-  </mah:MetroContentControl>
+                </CheckBox>
+            </StackPanel>
+
+            <StatusBar Grid.Row="1">
+                <StatusBar.Resources>
+                    <Style TargetType="StatusBarItem" BasedOn="{StaticResource {x:Type StatusBarItem}}">
+                        <Setter Property="FontSize" Value="10" />
+                    </Style>
+                </StatusBar.Resources>
+                <StatusBarItem Content="Target:" />
+                <StatusBarItem Content="12,123,123,123" />
+            </StatusBar>
+        </Grid>
+    </mah:MetroContentControl>
 </mah:MetroWindow>

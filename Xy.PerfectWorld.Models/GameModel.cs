@@ -12,19 +12,33 @@ namespace Xy.PerfectWorld.Models
 {
     public class GameModel : ReactiveObject
     {
-        private Core core;
-        private Game game;
+        public Game Game { get; }
+        public Process Process { get; }
 
-        public int ProcessID { get; }
+        GameStatus status;
+        public GameStatus Status
+        {
+            get { return status; }
+            set { this.RaiseAndSetIfChanged(ref status, value); }
+        }
+        string player;
+        public string Player
+        {
+            get { return player; }
+            set { this.RaiseAndSetIfChanged(ref player, value); }
+        }
 
         public GameModel(Process process)
         {
-            ProcessID = process.Id;
-            core = Core.Attach(process);
-            game = new Game(core);
+            Process = process;
+            Game = new Game(Core.Attach(process));
 
-            //Observable.Interval(TimeSpan.FromSeconds(1))
-            //    .Select(_ => game.)
+            Observable.Interval(TimeSpan.FromSeconds(1), RxApp.MainThreadScheduler)
+                .Subscribe(_ =>
+                {
+                    this.Status = Game.GameStatus;
+                    this.Player = new Character(Game).Name.Value;
+                });
         }
     }
 }

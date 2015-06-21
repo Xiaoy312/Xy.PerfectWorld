@@ -8,6 +8,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Linq;
+using Xy.PerfectWorld.ViewModels;
 
 namespace Xy.PW
 {
@@ -34,10 +35,14 @@ namespace Xy.PW
                 throw new UnauthorizedAccessException("XyPW requires administrative rights to work. Please restart as admin.");
             }
 
-            var view = new MainView();
-            view.DataContext = null;
-
+            var view = new MainView() { DataContext = AppViewModel.Instance };
             view.Show();
+
+
+            //var view = this.Windows.OfType<SettingView>().SingleOrDefault() ??
+            //    new SettingView() { DataContext = AppViewModel.SettingVM };
+
+            //view.Show();
         }
 
         private void ReportUnhandledException(Exception exception)

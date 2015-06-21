@@ -1,5 +1,6 @@
 ﻿using ReactiveUI;
 using System;
+using MoreLinq;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -12,28 +13,40 @@ namespace Xy.PerfectWorld.ViewModels
 {
     public class SettingViewModel : ReactiveObject
     {
-        public ReactiveList<Process> RunningProcesses { get; }
-        public IReactiveDerivedList<GameModel> RunningGames { get; }
+        public ReactiveList<GameModel> RunningGames { get; }
+
+        GameModel selectedGame;
+        public GameModel SelectedGame
+        {
+            get { return selectedGame; }
+            set { this.RaiseAndSetIfChanged(ref selectedGame, value); }
+        }
+
+        public ReactiveCommand<object> AttachToGame { get; }
 
         public SettingViewModel()
         {
-            RunningProcesses = new ReactiveList<Process>();
-            RunningGames = RunningProcesses.CreateDerivedCollection(x => new GameModel(x));
+            RunningGames = new ReactiveList<GameModel>();
 
+            Observable.Interval(TimeSpan.FromSeconds(1), RxApp.MainThreadScheduler)
+                .Subscribe(_ => RefreshGames());
 
-
-            RefreshGameListCommand = ReactiveCommand.Create();
-            RefreshGameListCommand.Subscribe(RefreshGameList);
-            RefreshGameListCommand.Execute(null);
+            RunningGames.CountChanged
+                .Where(count => count != 0 && SelectedGame == null)
+                .Subscribe(_ => SelectedGame = RunningGames.FirstOrDefault());
         }
 
-        public ReactiveCommand<object> RefreshGameListCommand { get; }
-        public void RefreshGameList(object unused)
+        public void RefreshGames()
         {
-            RunningProcesses.RemoveAll(RunningProcesses.Where(x => x.HasExited));
-            RunningProcesses.AddRange(
-                Process.GetProcessesByName("elementclient")
-                    .Except(RunningProcesses));
+            RunningGames.RemoveAll(
+                RunningGames.Where(x => x.Process.HasExited));
+
+            Process.GetProcessesByName("elementclient")
+                .Where(p => !RunningGames.Any(g => p.Id == g.Process.Id))
+                .Select(x => new GameModel(x))
+                .ForEach(RunningGames.Add);
         }
     }
+
+
 }

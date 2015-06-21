@@ -8,10 +8,15 @@ using Xy.DataAnalysis;
 
 namespace Xy.PerfectWorld.Models
 {
-    public class GroundContainer : SingletonEntity<GroundContainer>
+    public class GroundContainer : Entity
     {
+        public GroundContainer(Game game)
+        {
+            GroundBase = game.GroundBase;
+        }
+
         [BaseAddress]
-        public Pointer GroundBase { get; } = Environment.Instance.EnvironmentBase + 0x28;
+        public Pointer GroundBase { get; }
 
         [Hexadecimal]
         public Pointer FirstItem { get { return GroundBase + 0x18; } }

@@ -8,8 +8,19 @@ namespace Xy.DataAnalysis
 {
     public abstract class PointerBase
     {
-        public Expression<Func<int>> GetAddress { get; set; }
+        public Core Core { get; }
+        public Expression<Func<int>> GetAddress { get; }
         public int Address { get { return GetAddress.Compile().Invoke(); } }
+
+        protected PointerBase(Core core, int baseAddress) :
+            this(core, () => baseAddress)
+        {
+        }
+        protected PointerBase(Core core, Expression<Func<int>> getAddress)
+        {
+            Core = core;
+            GetAddress = getAddress;
+        }
 
         /// <summary>
         /// Check if the pointer is static or dynamic
@@ -65,19 +76,34 @@ namespace Xy.DataAnalysis
     {
         public int Value { get { return Core.ReadInt(Address); } }
 
-        public Pointer() { }
+        protected Pointer(Core core, Expression<Func<int>> getAddress) : base(core, getAddress)
+        {
+        }
 
-        public static Pointer MultiPointer(int address, params int[] offsets)
+        /// <summary>
+        /// Create a multi-level pointer
+        /// </summary>
+        /// <param name="address">Static address</param>
+        /// <param name="offsets">Array of offset</param>
+        public static Pointer MultiPointer(Core core, int address, params int[] offsets)
         {
-            return offsets.Aggregate(Pointer.FromStaticAddress(address), (x, offset) => x + offset);
+            return offsets.Aggregate(Pointer.FromStaticAddress(core, address), (x, offset) => x + offset);
         }
-        public static Pointer FromStaticAddress(int address)
+
+        /// <summary>
+        /// Create a static pointer
+        /// </summary>
+        /// <param name="address">Static address</param>
+        /// <returns></returns>
+        public static Pointer FromStaticAddress(Core core, int address)
         {
-            return new Pointer() { GetAddress = () => address };
+            return new Pointer(core, () => address);
         }
+
+        /// <returns>A pointer pointing to the value of base address offseted</returns>
         public static Pointer operator +(Pointer baseAddress, int offset)
         {
-            return new Pointer() { GetAddress = () => baseAddress.Value + offset };
+            return new Pointer(baseAddress.Core, () => baseAddress.Value + offset);
         }
     }
 
@@ -157,21 +183,23 @@ namespace Xy.DataAnalysis
             }
         }
 
+        public void SetValue(T value)
+        {
+            throw new NotImplementedException();
+        }
+
         public override string ToString()
         {
             return $"[+{GetOffset().ToString("X3")}]->{Value}";
         }
 
         // hide default public constructor
-        private Pointer() { }
-
-        public void SetValue(T value)
+        private Pointer(Pointer pointer) : base(pointer.Core, pointer.GetAddress)
         {
-            throw new NotImplementedException();
         }
         public static implicit operator Pointer<T>(Pointer pointer)
         {
-            return new Pointer<T>() { GetAddress = pointer.GetAddress };
+            return new Pointer<T>(pointer);
         }
         public static implicit operator T(Pointer<T> pointer)
         {

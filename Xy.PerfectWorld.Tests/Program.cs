@@ -13,13 +13,17 @@ namespace Xy.PerfectWorld.Tests
     {
         static void Main(string[] args)
         {
-            Game.Initialize();
+            var core = Core.Attach(Process.GetProcessesByName("elementclient").First());
 
-            Character.Instance.DumpProperties();
-            NpcContainer.Instance.DumpProperties();
-            GroundContainer.Instance.DumpProperties();
+            var game = new Game(core);
 
-            foreach (var item in GroundContainer.Instance.GetItems())
+            new Character(game).DumpProperties();
+            new NpcContainer(game).DumpProperties();
+            new GroundContainer(game).DumpProperties();
+
+            new GroundContainer(game).GetItems();
+
+            foreach (var item in new GroundContainer(game).GetItems())
             {
                 Debug.WriteLine(item);
             }

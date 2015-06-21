@@ -8,11 +8,11 @@ using Xy.DataAnalysis;
 
 namespace Xy.PerfectWorld.Models
 {
-    public class Character : SingletonEntity<Character>
+    public class Character : Entity
     {
-        public Character()
+        public Character(Game game)
         {
-            CharacterBase = Pointer.MultiPointer(0x00926FD4, 0x1C, 0x20);
+            CharacterBase = game.CharacterBase;
         }
 
         [BaseAddress]

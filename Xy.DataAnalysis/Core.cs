@@ -9,11 +9,15 @@ using System.Threading.Tasks;
 
 namespace Xy.DataAnalysis
 {
-    public static class Core
+    public class Core
     {
-        public static IntPtr Handle { get; private set; }
+        public IntPtr Handle { get; }
 
-        public static void Attach(Process process)
+        private Core(IntPtr handle)
+        {
+            Handle = handle;
+        }
+        public static Core Attach(Process process)
         {
             var handle = API.OpenProcess(API.ALMOST_ALL_OF_THEM, IntPtr.Zero, new IntPtr(process.Id));
             if (handle == IntPtr.Zero)
@@ -23,31 +27,31 @@ namespace Xy.DataAnalysis
                     new Win32Exception());
             }
 
-            Handle = handle;
+            return new Core(handle);
         }
 
-        public static float ReadFloat(int address)
+        public float ReadFloat(int address)
         {
             float value = default(float);
             API.ReadProcessMemory(Handle, address, ref value, sizeof(float), 0);
 
             return value;
         }
-        public static int ReadInt(int address)
+        public int ReadInt(int address)
         {
             int value = 0;
             API.ReadProcessMemory(Handle, address, ref value, sizeof(int), 0);
 
             return value;
         }
-        public static byte[] ReadBytes(int address, int length)
+        public byte[] ReadBytes(int address, int length)
         {
             var buffer = new byte[length];
             API.ReadProcessMemory(Handle, address, buffer, length, 0);
 
             return buffer;
         }
-        public static int WriteBytes(int address, byte[] buffer)
+        public int WriteBytes(int address, byte[] buffer)
         {
             return API.WriteProcessMemory(Handle, address, buffer, buffer.Length, 0);
         }

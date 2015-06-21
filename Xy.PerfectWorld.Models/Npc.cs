@@ -8,20 +8,19 @@ using Xy.DataAnalysis;
 
 namespace Xy.PerfectWorld.Models
 {
-    public class Environment : SingletonEntity<Environment>
+    public class NpcContainer : Entity
     {
-        [BaseAddress]
-        public Pointer EnvironmentBase { get; } = Pointer.MultiPointer(0x00926FD4, 0x1C, 0x8);
-    }
+        public NpcContainer(Game game)
+        {
+            NpcBase = game.NpcBase;
+        }
 
-    public class NpcContainer : SingletonEntity<NpcContainer>
-    {
         [BaseAddress]
-        public Pointer EnvironmentBase { get; } = Environment.Instance.EnvironmentBase + 0x24;
+        public Pointer NpcBase { get; }
 
         [Hexadecimal]
-        public Pointer FirstItem { get { return EnvironmentBase + 0x18; } }
-        public Pointer<int> MaxSize { get { return EnvironmentBase + 0x24; } }
+        public Pointer FirstItem { get { return NpcBase + 0x18; } }
+        public Pointer<int> MaxSize { get { return NpcBase + 0x24; } }
 
         public IEnumerable<Npc> GetItems()
         {
@@ -50,7 +49,7 @@ namespace Xy.PerfectWorld.Models
 
         public override string ToString()
         {
-            return $"[{NpcBase.Value.ToString("X")}]" + string.Join(","
+            return $"[{NpcBase.Value.ToString("X")}]" + string.Join(", "
                    , $"{nameof(ID)} -> {ID.Value.ToString("X8")}"
                    , $"{nameof(Level)} = {Level.Value.ToString("D4")}"
                    , $"{nameof(Name)} = {Name.Value}"

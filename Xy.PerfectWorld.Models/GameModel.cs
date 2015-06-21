@@ -20,10 +20,6 @@ namespace Xy.PerfectWorld.Models
         public GameModel(Process process)
         {
             this.process = process;
-            this.handle = Core.OpenProcess(process.Id);
-
-            Observable.Interval(TimeSpan.FromSeconds(1))
-                .Select(x => ).ToProperty()
         }
     }
 

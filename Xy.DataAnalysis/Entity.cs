@@ -54,16 +54,4 @@ namespace Xy.DataAnalysis
             }
         }
     }
-
-    public abstract class SingletonEntity<T> : Entity
-        where T : SingletonEntity<T>, new()
-    {
-        public readonly static T Instance;
-
-        static SingletonEntity()
-        {
-            Instance = new T();
-        }
-    }
-
 }

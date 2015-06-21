@@ -58,7 +58,8 @@ namespace Xy.DataAnalysis
         /// </summary>
         public int GetOffset()
         {
-            return Expression.Lambda<Func<int>>((GetAddress.Body as BinaryExpression).Right).Compile().Invoke();
+            return !(GetAddress.Body is BinaryExpression) ? 0 :
+                Expression.Lambda<Func<int>>((GetAddress.Body as BinaryExpression).Right).Compile().Invoke();
         }
 
         public object GetValue()

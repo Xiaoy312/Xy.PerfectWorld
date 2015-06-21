@@ -10,13 +10,17 @@ namespace Xy.PerfectWorld.Models
 {
     public class Game : Entity
     {
+        public Core Core { get; }
         public Game(Core core)
         {
+            Core = core;
             GameBase = Pointer.FromStaticAddress(core, 0x926FD4);
         }
 
         [BaseAddress]
         public Pointer GameBase { get; }
+
+        public Pointer<GameStatus> GameStatus { get { return Pointer.FromStaticAddress(Core, 0x0092AAC0); } }
         
         public Pointer DynamicBase { get { return GameBase + 0x1C; } }
 
@@ -34,4 +38,8 @@ namespace Xy.PerfectWorld.Models
         public Pointer SkillBase { get { return CharacterBase + 0xBDC; } }
     }
 
+    public enum GameStatus
+    {
+        Offline = 1, LoggedIn = 2
+    }
 }

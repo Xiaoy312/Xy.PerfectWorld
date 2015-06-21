@@ -12,19 +12,19 @@ namespace Xy.PerfectWorld.Models
 {
     public class GameModel : ReactiveObject
     {
-        private Process process;
-        private IntPtr handle;
+        private Core core;
+        private Game game;
 
-        public int PID { get { return process.Id; } }
+        public int ProcessID { get; }
 
         public GameModel(Process process)
         {
-            this.process = process;
-        }
-    }
+            ProcessID = process.Id;
+            core = Core.Attach(process);
+            game = new Game(core);
 
-    public enum GameStatus : int
-    {
-        Offline = 1, LoggedIn = 2
+            //Observable.Interval(TimeSpan.FromSeconds(1))
+            //    .Select(_ => game.)
+        }
     }
 }

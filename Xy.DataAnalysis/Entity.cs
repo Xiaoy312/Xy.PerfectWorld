@@ -18,6 +18,7 @@ namespace Xy.DataAnalysis
             //remember to tag [BaseAddress]
             var entityBase = properties.Single(p => p.HasAttribute<BaseAddressAttribute>());
             var entityPropertyies = properties.Where(p => !p.HasAttribute<BaseAddressAttribute>())
+                .Where(p => typeof(PointerBase).IsAssignableFrom(p.PropertyType))
                 .OrderBy(p => (p.GetValue(this, null) as PointerBase).GetOffset());
 
             Prettify(entityBase).Dump();
@@ -42,7 +43,9 @@ namespace Xy.DataAnalysis
 
             var propertyName = property.Name.PadRight(padding);
 
-            if (pointer.IsStatic())
+            var isBaseAddress = property.HasAttribute<BaseAddressAttribute>();
+            var isDataPointer = property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(Pointer<>);
+            if (isBaseAddress || !isDataPointer)
             {
                 return String.Format("{0} : {1:X8} -> {2:X8}",
                     propertyName, pointer.Address, pointer.GetValue());

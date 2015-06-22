@@ -21,13 +21,13 @@ namespace Xy.PerfectWorld.ViewModels
             get { return attachedGame.Value; }
         }
 
-        bool autoCombatEnabled = true;
+        bool autoCombatEnabled = false;
         public bool AutoCombatEnabled
         {
             get { return autoCombatEnabled; }
             set { this.RaiseAndSetIfChanged(ref autoCombatEnabled, value); }
         }
-        bool autoLootEnabled = true;
+        bool autoLootEnabled = false;
         public bool AutoLootEnabled
         {
             get { return autoLootEnabled; }
@@ -39,12 +39,18 @@ namespace Xy.PerfectWorld.ViewModels
             attachedGame = SettingVM.WhenAny(x => x.SelectedGame, x => x.Value)
                 .ToProperty(this, x => x.AttachedGame);
 
+            InitializeAutoCombat();
             InitializeAutoLoot();
+        }
+
+        private void InitializeAutoCombat()
+        {
+
         }
 
         private void InitializeAutoLoot()
         {
-            Observable.Interval(TimeSpan.FromSeconds(1))
+            Observable.Interval(TimeSpan.FromMilliseconds(333))
                 .Where(_ => (AttachedGame?.Status ?? GameStatus.Offline) == GameStatus.LoggedIn && AutoLootEnabled)
                 .Subscribe(_ => AutoLootPerform());
         }
@@ -61,13 +67,12 @@ namespace Xy.PerfectWorld.ViewModels
                     .OrderBy(x => x.RelativeDistance.Value)
                     .FirstOrDefault();
 
-                Debug.WriteLine("Looting : " + item);
                 if (item != null)
                     AttachedGame.Game.Loot(item);
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Error occured in AutoLootPerform : " + e);
+                Debug.WriteLine($"An exception occured in {nameof(AutoLootPerform)} : {e}");
             }
         }
     }
@@ -83,5 +88,4 @@ namespace Xy.PerfectWorld.ViewModels
             return source;
         }
     }
-
 }

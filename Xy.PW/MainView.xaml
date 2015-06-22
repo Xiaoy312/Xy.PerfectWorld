@@ -38,7 +38,7 @@
                     </Style>
                 </StackPanel.Resources>
 
-                <CheckBox Content="AC" IsChecked="{Binding AutoCombatEnabled}">
+                <CheckBox Content="AC" IsChecked="{Binding AutoCombatEnabled}" Visibility="Collapsed">
                     <CheckBox.ToolTip>
                         <TextBlock>
                             <Run FontWeight="Bold">Auto-Combat</Run>
@@ -48,11 +48,20 @@
                     </CheckBox.ToolTip>
                 </CheckBox>
                 <CheckBox Content="AL" IsChecked="{Binding AutoLootEnabled}">
-
+                    <CheckBox.ToolTip>
+                        <TextBlock>
+                            <Run FontWeight="Bold">Auto-Loot</Run>
+                            <LineBreak />
+                            <Run>Automatically loot any valuable within range</Run>
+                            <LineBreak />
+                            <LineBreak />
+                            <Run FontStyle="Italic">Only works on gold currently</Run>
+                        </TextBlock>
+                    </CheckBox.ToolTip>
                 </CheckBox>
             </StackPanel>
 
-            <StatusBar Grid.Row="1">
+            <StatusBar Grid.Row="1" Visibility="Collapsed">
                 <StatusBar.Resources>
                     <Style TargetType="StatusBarItem" BasedOn="{StaticResource {x:Type StatusBarItem}}">
                         <Setter Property="FontSize" Value="10" />

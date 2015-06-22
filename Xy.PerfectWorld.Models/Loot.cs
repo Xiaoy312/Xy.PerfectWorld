@@ -27,19 +27,31 @@ namespace Xy.PerfectWorld.Models
 
         public IEnumerable<GroundItem> GetItems()
         {
-            return Enumerable.Range(0, MaxSize)
-                .Select(i => new GroundItem(FirstItem + i * 0x4))
-                .Where(i => i.LootBase.Value != 0)
-                //.Where(i => i.ID != 0 && Enum.IsDefined(typeof(NpcType), i.NpcType.Value))
-                ;
+            var core = GroundBase.Core;
+            var size = MaxSize.Value;
+            var first = FirstItem.Value;
+
+            for (int i = 0; i < size; i++)
+            {
+                var iterator = core.ReadInt(first + i * 4);
+                if (iterator == 0) continue;
+                var pitem = core.ReadInt(iterator + 4);
+                if (pitem == 0) continue;
+
+                yield return new GroundItem(core, iterator + 4);
+            }
         }
     }
 
     public class GroundItem : Entity
     {
-        internal GroundItem(Pointer npc)
+        internal GroundItem(Pointer address)
         {
-            LootBase = npc + 0x4;
+            LootBase = address + 0x4;
+        }
+        internal GroundItem(Core core, int address)
+        {
+            LootBase = Pointer.FromStaticAddress(core, address);
         }
 
         [BaseAddress]

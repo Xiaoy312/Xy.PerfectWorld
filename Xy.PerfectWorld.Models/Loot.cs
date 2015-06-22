@@ -73,6 +73,7 @@ namespace Xy.PerfectWorld.Models
             return $"[{LootBase.Value.ToString("X")}]" + string.Join(",",
                    $"{nameof(ID)} -> {ID.Value.ToString("X8")}",
                    $"{nameof(Type)} = {Type.Value.ToString("X4")}",
+                   $"{nameof(RelativeDistance)} = {RelativeDistance.Value.ToString("0.000")}",
                    $"{nameof(Name)} = {Name.Value}"
                 );
         }

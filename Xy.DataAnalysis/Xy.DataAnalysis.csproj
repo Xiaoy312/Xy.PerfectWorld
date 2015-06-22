@@ -53,6 +53,7 @@
     <Compile Include="Entity.cs" />
     <Compile Include="Extension\DumpExtension.cs" />
     <Compile Include="Extension\ReflectionExtension.cs" />
+    <Compile Include="Legacy\Asm.cs" />
     <Compile Include="Pointer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\Indentation.cs" />

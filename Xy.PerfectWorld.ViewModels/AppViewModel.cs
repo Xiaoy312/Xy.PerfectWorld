@@ -27,6 +27,12 @@ namespace Xy.PerfectWorld.ViewModels
             get { return autoCombatEnabled; }
             set { this.RaiseAndSetIfChanged(ref autoCombatEnabled, value); }
         }
+        bool autoLootEnabled = true;
+        public bool AutoLootEnabled
+        {
+            get { return autoLootEnabled; }
+            set { this.RaiseAndSetIfChanged(ref autoLootEnabled, value); }
+        }
 
         private AppViewModel()
         {
@@ -36,26 +42,46 @@ namespace Xy.PerfectWorld.ViewModels
             InitializeAutoLoot();
         }
 
-
-        #region property AutoLootEnabled
-        bool autoLootEnabled = true;
-        public bool AutoLootEnabled
-        {
-            get { return autoLootEnabled; }
-            set { this.RaiseAndSetIfChanged(ref autoLootEnabled, value); }
-        } 
-        #endregion
-        
-
         private void InitializeAutoLoot()
         {
             Observable.Interval(TimeSpan.FromSeconds(1))
                 .Where(_ => (AttachedGame?.Status ?? GameStatus.Offline) == GameStatus.LoggedIn && AutoLootEnabled)
-                .Subscribe(_ =>
-                {
-                    var ground = new GroundContainer(AttachedGame.Game);
-                    //ground.GetItems()
-                });
+                .Subscribe(_ => AutoLootPerform());
+        }
+        private void AutoLootPerform()
+        {
+            try
+            {
+                const float MaxLootRange = 10.0f;
+
+                var ground = new GroundContainer(AttachedGame.Game);
+                var item = ground.GetItems()
+                    .Where(x => x.CollectMethod == CollectMethod.Gold)
+                    .Where(x => x.RelativeDistance <= MaxLootRange)
+                    .OrderBy(x => x.RelativeDistance.Value)
+                    .FirstOrDefault();
+
+                Debug.WriteLine("Looting : " + item);
+                if (item != null)
+                    AttachedGame.Game.Loot(item);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Error occured in AutoLootPerform : " + e);
+            }
         }
     }
+
+    public static class DumpExtension
+    {
+        public static IEnumerable<T> Dump<T>(this IEnumerable<T> source, string header = "Dumped : ")
+        {
+            foreach (var item in source)
+            {
+                Debug.WriteLine(header + item);
+            }
+            return source;
+        }
+    }
+
 }

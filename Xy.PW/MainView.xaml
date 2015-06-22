@@ -23,8 +23,7 @@
             </Button>
         </mah:WindowCommands>
     </mah:MetroWindow.RightWindowCommands>
-
-
+    
     <mah:MetroContentControl>
         <Grid>
             <Grid.RowDefinitions>
@@ -48,7 +47,7 @@
                         </TextBlock>
                     </CheckBox.ToolTip>
                 </CheckBox>
-                <CheckBox Content="AL" IsChecked="{Binding AutoCombatEnabled}">
+                <CheckBox Content="AL" IsChecked="{Binding AutoLootEnabled}">
 
                 </CheckBox>
             </StackPanel>

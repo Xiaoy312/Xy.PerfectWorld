@@ -12,8 +12,8 @@ namespace Xy.PerfectWorld.Models
 {
     public class GameModel : ReactiveObject
     {
-        public Game Game { get; }
         public Process Process { get; }
+        public Game Game { get; }
 
         GameStatus status;
         public GameStatus Status

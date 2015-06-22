@@ -25,14 +25,16 @@ namespace Xy.PW
 #else
             if (Environment.UserName != "Xiaoy")
             {
-                ReportUnhandledException(new Exception("Tell Xiaoy that he shipped the wrong the version."));
+                MessageBox.Show("Tell Xiaoy that he shipped the wrong the version.", this.GetType().Namespace, MessageBoxButton.OK, MessageBoxImage.Information);
+                Shutdown();
             }
 #endif
             // check admin rights
             var isAdmin = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
             if (!isAdmin)
             {
-                throw new UnauthorizedAccessException("XyPW requires administrative rights to work. Please restart as admin.");
+                MessageBox.Show("XyPW requires administrative rights to work. Please restart as admin.", this.GetType().Namespace, MessageBoxButton.OK, MessageBoxImage.Information);
+                Shutdown();
             }
 
             var view = new MainView() { DataContext = AppViewModel.Instance };
@@ -66,7 +68,7 @@ namespace Xy.PW
             convertToXml(exception).Save(path);
 
             var message = "An error log has been produced for this error, which can be found at \n" + path + "\n" +
-                "Here is an summary of the error : \n" + exception;
+                "Here is an summary of the error : \n\n" + exception;
             MessageBox.Show(message, "Something went wrong...", MessageBoxButton.OK, MessageBoxImage.Error);
 
             Shutdown();

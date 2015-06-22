@@ -10,11 +10,13 @@ namespace Xy.PerfectWorld.Models
 {
     public class Game : Entity
     {
+        public const int GameBaseAddress = 0x926FD4;
+
         public Core Core { get; }
         public Game(Core core)
         {
             Core = core;
-            GameBase = Pointer.FromStaticAddress(core, 0x926FD4);
+            GameBase = Pointer.FromStaticAddress(core, GameBaseAddress);
         }
 
         [BaseAddress]

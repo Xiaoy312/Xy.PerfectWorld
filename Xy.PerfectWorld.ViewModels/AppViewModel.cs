@@ -15,24 +15,31 @@ namespace Xy.PerfectWorld.ViewModels
         public static AppViewModel Instance = new AppViewModel();
         public SettingViewModel SettingVM = new SettingViewModel();
 
+        #region AttachedGame
         readonly ObservableAsPropertyHelper<GameModel> attachedGame;
         public GameModel AttachedGame
         {
             get { return attachedGame.Value; }
         }
-
+        #endregion
+        #region AutoCombatEnabled
         bool autoCombatEnabled = false;
         public bool AutoCombatEnabled
         {
             get { return autoCombatEnabled; }
             set { this.RaiseAndSetIfChanged(ref autoCombatEnabled, value); }
         }
+        #endregion
+        #region AutoLootEnabled
         bool autoLootEnabled = false;
         public bool AutoLootEnabled
         {
             get { return autoLootEnabled; }
             set { this.RaiseAndSetIfChanged(ref autoLootEnabled, value); }
         }
+        #endregion
+
+        private bool lootedInLastLoop;
 
         private AppViewModel()
         {
@@ -45,8 +52,48 @@ namespace Xy.PerfectWorld.ViewModels
 
         private void InitializeAutoCombat()
         {
-
+            Observable.Interval(TimeSpan.FromMilliseconds(333))
+                .Where(_ => (AttachedGame?.Status ?? GameStatus.Offline) == GameStatus.LoggedIn && AutoCombatEnabled)
+                .Where(_ => !lootedInLastLoop)
+                .Subscribe(_ => AutoCombatPerform());
         }
+        private void AutoCombatPerform()
+        {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            try
+            {
+                var character = new Character(AttachedGame.Game);
+                if (character.SelectedTargetID == 0)
+                    AC_AcquireTarget();
+                else
+                    AC_InvokeAttack();
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine($"An exception occured in {nameof(AutoLootPerform)} : {e}");
+            }
+
+            Debug.WriteLine("AutoCombat elapsed: " + stopwatch.ElapsedMilliseconds);
+        }
+        private void AC_AcquireTarget()
+        {
+            var npc = new NpcContainer(AttachedGame.Game).GetItems()
+                .Where(x => x.NpcType.Value == NpcType.Monster)
+                .OrderBy(x => x.RelativeDistance.Value)
+                .FirstOrDefault();
+
+            if (npc != null)
+            {
+                npc.Target();
+                AC_InvokeAttack();
+            }
+        }
+        private void AC_InvokeAttack()
+        {
+            new Character(AttachedGame.Game).Attack();
+        }
+
 
         private void InitializeAutoLoot()
         {
@@ -62,13 +109,17 @@ namespace Xy.PerfectWorld.ViewModels
 
                 var ground = new GroundContainer(AttachedGame.Game);
                 var item = ground.GetItems()
-                    .Where(x => x.CollectMethod == CollectMethod.Gold)
+                    .Where(x => x.CollectMethod.Value == CollectMethod.Gold)
                     .Where(x => x.RelativeDistance <= MaxLootRange)
                     .OrderBy(x => x.RelativeDistance.Value)
                     .FirstOrDefault();
 
                 if (item != null)
-                    AttachedGame.Game.Loot(item);
+                {
+                    item.Loot();
+                }
+
+                lootedInLastLoop = item != null;
             }
             catch (Exception e)
             {

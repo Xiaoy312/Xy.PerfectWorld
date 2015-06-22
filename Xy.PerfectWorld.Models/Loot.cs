@@ -62,8 +62,8 @@ namespace Xy.PerfectWorld.Models
         public Pointer<float> Z { get { return LootBase + 0x044; } }
 
         [Hexadecimal]
-        public Pointer<int> ID { get { return LootBase + 0x010C; } }
-        public Pointer<int> Type { get { return LootBase + 0x0110; } }
+        public Pointer<int> UniqueID { get { return LootBase + 0x010C; } }
+        public Pointer<int> ItemID { get { return LootBase + 0x0110; } }
 
         public Pointer<CollectMethod> CollectMethod { get { return LootBase + 0x014C; } }
 
@@ -83,8 +83,8 @@ namespace Xy.PerfectWorld.Models
         public override string ToString()
         {
             return $"[{LootBase.Value.ToString("X")}]" + string.Join(",",
-                   $"{nameof(ID)} -> {ID.Value.ToString("X8")}",
-                   $"{nameof(Type)} = {Type.Value.ToString("X4")}",
+                   $"{nameof(UniqueID)} -> {UniqueID.Value.ToString("X8")}",
+                   $"{nameof(ItemID)} = {ItemID.Value.ToString("X4")}",
                    $"{nameof(RelativeDistance)} = {RelativeDistance.Value.ToString("0.000")}",
                    $"{nameof(Name)} = {Name.Value}"
                 );

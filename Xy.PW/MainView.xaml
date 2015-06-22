@@ -38,7 +38,7 @@
                     </Style>
                 </StackPanel.Resources>
 
-                <CheckBox Content="AC" IsChecked="{Binding AutoCombatEnabled}" Visibility="Collapsed">
+                <CheckBox Content="AC" IsChecked="{Binding AutoCombatEnabled}">
                     <CheckBox.ToolTip>
                         <TextBlock>
                             <Run FontWeight="Bold">Auto-Combat</Run>

@@ -18,16 +18,22 @@ namespace Xy.PerfectWorld.Tests
             var game = new Game(core);
             //game.DumpProperties();
 
-            //new Character(game).DumpProperties();
+            var character = new Character(game);
             //new NpcContainer(game).DumpProperties();
             //new GroundContainer(game).DumpProperties();
 
             //new GroundContainer(game).GetItems();
 
-            foreach (var item in new GroundContainer(game).GetItems())
+            foreach (var item in new NpcContainer(game).GetItems()
+                .Where(x => x.NpcType.Value == NpcType.Monster).Take(1))
             {
+                //if (item.UniqueID != character.SelectedTargetID) continue;
+
                 Debug.WriteLine(item);
                 item.DumpProperties();
+
+                item.Target();
+                character.Attack();
             }
         }
     }

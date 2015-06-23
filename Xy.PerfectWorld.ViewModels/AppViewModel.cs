@@ -80,7 +80,7 @@ namespace Xy.PerfectWorld.ViewModels
         }
         private void InitializeAutoLoot()
         {
-            Observable.Interval(TimeSpan.FromMilliseconds(333))
+            Observable.Interval(TimeSpan.FromMilliseconds(250))
                 .Where(_ => (AttachedGame?.Status ?? GameStatus.Offline) == GameStatus.LoggedIn && AutoLootEnabled)
                 .Subscribe(_ => AutoLootPerform());
         }
@@ -89,12 +89,13 @@ namespace Xy.PerfectWorld.ViewModels
             try
             {
                 const float MaxLootRange = 10.0f;
-
+                var canLootGold = new Character(AttachedGame.Game).Gold != 200000000; 
                 var ground = new GroundContainer(AttachedGame.Game);
+
                 var item = ground.GetItems()
-                    .Where(x => x.CollectMethod.Value == CollectMethod.Gold)
+                    .Where(x => ShouldLoot(x, canLootGold))
                     .Where(x => x.RelativeDistance <= MaxLootRange)
-                    .OrderBy(x => x.RelativeDistance.Value)
+                    .OrderBy(x => x.RelativeDistance)
                     .FirstOrDefault();
 
                 if (item != null)
@@ -108,6 +109,27 @@ namespace Xy.PerfectWorld.ViewModels
             {
                 Debug.WriteLine($"An exception occured in {nameof(AutoLootPerform)} : {e}");
             }
+        }
+        private bool ShouldLoot(GroundItem item, bool canLootGold = true)
+        {
+            switch (item.CollectMethod.Value)
+            {
+                case CollectMethod.Gold: return canLootGold;
+                case CollectMethod.Resource: return false;
+            }
+
+            switch (item.ItemID.Value)
+            {
+                case 0x527E: // Martial God·Virtuous Stele
+                case 0x527F: // Martial God·Virtuous Stone
+                case 0x5280: // Martial God·Manjushri Stele
+                case 0x5281: // Martial God·Manjushri Stone
+                case 0x5286: // Martial God·Guanyin Stele
+                case 0x5287: // Martial God·Guanyin Stone
+                    return true;
+            }
+
+            return false;
         }
     }
 

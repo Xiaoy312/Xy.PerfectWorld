@@ -50,7 +50,7 @@ namespace Xy.PerfectWorld.Models
         public Pointer<int> EarthResistance { get { return CharacterBase + 0x4EC; } }
         public Pointer<int> PhysicalDefence { get { return CharacterBase + 0x4F0; } }
         public Pointer<int> Dodge { get { return CharacterBase + 0x4F4; } }
-        public Pointer<int> Gold{ get { return CharacterBase + 0x4FC; } }
+        public Pointer<int> Gold { get { return CharacterBase + 0x4FC; } }
         public Pointer<int> Reputation { get { return CharacterBase + 0x55C; } }
         public Pointer<WString> Name { get { return CharacterBase + 0x5CC; } }
         public Pointer<Class> Class { get { return CharacterBase + 0x5D4; } }

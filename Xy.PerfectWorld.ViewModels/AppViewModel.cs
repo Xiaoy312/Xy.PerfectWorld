@@ -59,42 +59,25 @@ namespace Xy.PerfectWorld.ViewModels
         }
         private void AutoCombatPerform()
         {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
             try
             {
                 var character = new Character(AttachedGame.Game);
-                if (character.SelectedTargetID == 0)
-                    AC_AcquireTarget();
-                else
-                    AC_InvokeAttack();
+
+                // reacquire closest target, before attacking
+                var npc = new NpcContainer(AttachedGame.Game).GetItems()
+                    .Where(x => x.NpcType.Value == NpcType.Monster)
+                    .OrderBy(x => x.RelativeDistance.Value)
+                    .FirstOrDefault();
+                if (npc.UniqueID != character.SelectedTargetID)
+                    npc.Target();
+
+                character.Attack();
             }
             catch (Exception e)
             {
                 Debug.WriteLine($"An exception occured in {nameof(AutoLootPerform)} : {e}");
             }
-
-            Debug.WriteLine("AutoCombat elapsed: " + stopwatch.ElapsedMilliseconds);
         }
-        private void AC_AcquireTarget()
-        {
-            var npc = new NpcContainer(AttachedGame.Game).GetItems()
-                .Where(x => x.NpcType.Value == NpcType.Monster)
-                .OrderBy(x => x.RelativeDistance.Value)
-                .FirstOrDefault();
-
-            if (npc != null)
-            {
-                npc.Target();
-                AC_InvokeAttack();
-            }
-        }
-        private void AC_InvokeAttack()
-        {
-            new Character(AttachedGame.Game).Attack();
-        }
-
-
         private void InitializeAutoLoot()
         {
             Observable.Interval(TimeSpan.FromMilliseconds(333))

@@ -112,7 +112,7 @@ namespace Xy.DataAnalysis
     public class HiddenAttribute : Attribute { }
     public class HexadecimalAttribute : Attribute { }
 
-    public class WString
+    public class WString : IComparable
     {
         public readonly string Value;
         public WString(string value)
@@ -120,17 +120,22 @@ namespace Xy.DataAnalysis
             this.Value = value;
         }
 
+        public int CompareTo(object obj)
+        {
+            return Value.CompareTo(obj);
+        }
+
         public override string ToString()
         {
             return Value;
         }
 
-        public static implicit operator string(WString s)
+        public static implicit operator string (WString s)
         {
             return s.Value;
         }
     }
-    public class GB2312 //variable length encoding
+    public class GB2312 : IComparable //variable length encoding
     {
         public readonly string Value;
         public GB2312(string value)
@@ -138,18 +143,24 @@ namespace Xy.DataAnalysis
             this.Value = value;
         }
 
+        public int CompareTo(object obj)
+        {
+            return Value.CompareTo(obj);
+        }
+
         public override string ToString()
         {
             return Value;
         }
 
-        public static implicit operator string(GB2312 s)
+        public static implicit operator string (GB2312 s)
         {
             return s.Value;
         }
     }
 
-    public class Pointer<T> : PointerBase
+    public class Pointer<T> : PointerBase, IComparable, IComparable<Pointer<T>>
+        where T: IComparable
     {
         public T Value
         {
@@ -183,7 +194,6 @@ namespace Xy.DataAnalysis
                     throw new NotImplementedException("Unexpected Type : " + type.Name);
             }
         }
-
         public void SetValue(T value)
         {
             throw new NotImplementedException();
@@ -193,6 +203,24 @@ namespace Xy.DataAnalysis
         {
             return $"[+{GetOffset().ToString("X3")}]->{Value}";
         }
+
+        #region IComparable & IComparable<T> members
+        public int CompareTo(object obj)
+        {
+            if (obj == null || obj is Pointer<T>)
+                return -1;
+
+            return CompareTo(obj as Pointer<T>);
+        }
+        public int CompareTo(Pointer<T> other)
+        {
+            if (other == null)
+                return -1;
+
+            return Value.CompareTo(other.Value);
+        }
+        #endregion
+
 
         // hide default public constructor
         private Pointer(Pointer pointer) : base(pointer.Core, pointer.GetAddress)
@@ -209,7 +237,10 @@ namespace Xy.DataAnalysis
 
         public static bool operator ==(Pointer<T> a, Pointer<T> b)
         {
-            if (object.ReferenceEquals(a, b))
+            if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
+                return false;
+
+            if (ReferenceEquals(a, b))
                 return true;
 
             return Comparer<T>.Default.Compare(a, b) == 0;

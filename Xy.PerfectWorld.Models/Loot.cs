@@ -82,11 +82,11 @@ namespace Xy.PerfectWorld.Models
 
         public override string ToString()
         {
-            return $"[{LootBase.Value.ToString("X")}]" + string.Join(",",
-                   $"{nameof(UniqueID)} -> {UniqueID.Value.ToString("X8")}",
-                   $"{nameof(ItemID)} = {ItemID.Value.ToString("X4")}",
-                   $"{nameof(RelativeDistance)} = {RelativeDistance.Value.ToString("0.000")}",
-                   $"{nameof(Name)} = {Name.Value}"
+            return $"[{LootBase.Value.ToString("X")}]" + string.Join(", "
+                   , $"{nameof(UniqueID)} -> {UniqueID.Value.ToString("X8")}"
+                   , $"{nameof(RelativeDistance)} = {RelativeDistance.Value.ToString("0.000")}"
+                   , $"{nameof(ItemID)} = {ItemID.Value.ToString("X4")}"
+                   , $"{nameof(Name)} = {Name.Value}"
                 );
         }
     }

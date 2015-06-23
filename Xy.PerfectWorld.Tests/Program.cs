@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xy.DataAnalysis;
 using Xy.PerfectWorld.Models;
+using MoreLinq;
 
 namespace Xy.PerfectWorld.Tests
 {
@@ -24,16 +25,27 @@ namespace Xy.PerfectWorld.Tests
 
             //new GroundContainer(game).GetItems();
 
-            foreach (var item in new NpcContainer(game).GetItems()
-                .Where(x => x.NpcType.Value == NpcType.Monster).Take(1))
+            foreach (var item in new GroundContainer(game).GetItems()
+                .OrderBy(x => x.ItemID)
+                .DistinctBy(x => x.ItemID)
+                )
             {
-                //if (item.UniqueID != character.SelectedTargetID) continue;
+                switch (item.CollectMethod.Value)
+                {
+                    case CollectMethod.Gold: continue;
+                    case CollectMethod.Resource: continue;
+                }
 
-                Debug.WriteLine(item);
-                item.DumpProperties();
+                switch (item.ItemID.Value)
+                {
+                    case 0x527E: // Martial God·Virtuous Stele
+                    case 0x527F: // Martial God·Virtuous Stone
+                    case 0x5280: // Martial God·Manjushri Stele
+                    case 0x5281: // Martial God·Manjushri Stone
+                        continue;
+                }
 
-                item.Target();
-                character.Attack();
+                Debug.WriteLine($"case 0x{item.ItemID.Value.ToString("X4")}: // {item.Name.Value}");
             }
         }
     }

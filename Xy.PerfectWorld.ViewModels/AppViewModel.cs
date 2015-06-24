@@ -120,12 +120,23 @@ namespace Xy.PerfectWorld.ViewModels
 
             switch (item.ItemID.Value)
             {
+                case 0x527A: // Martial God·Ksitigarbha Stele
+                case 0x527B: // Martial God·Ksitigarbha Stone
+                case 0x527C: // Martial God·Steel Stele
+                case 0x527D: // Martial God·Steel Stone
                 case 0x527E: // Martial God·Virtuous Stele
                 case 0x527F: // Martial God·Virtuous Stone
                 case 0x5280: // Martial God·Manjushri Stele
                 case 0x5281: // Martial God·Manjushri Stone
+                case 0x5282: // Martial God·Hollow Stele
+                case 0x5283: // Martial God·Hollow Stone
+                case 0x5284: // Martial God·Removal Stele
+                case 0x5285: // Martial God·Removal Stone
                 case 0x5286: // Martial God·Guanyin Stele
                 case 0x5287: // Martial God·Guanyin Stone
+
+                case 0xD6D9: // g17 Ember
+                case 0xD6DA: // g17 Pearl
                     return true;
             }
 

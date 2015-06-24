@@ -173,6 +173,8 @@ namespace Xy.DataAnalysis
                     return (T)(object)Core.ReadBytes(Address, 1).First();
                 if (type == typeof(int))
                     return (T)(object)Core.ReadInt(Address);
+                if (type == typeof(uint))
+                    return (T)(object)(uint)Core.ReadInt(Address);
                 else if (type == typeof(float))
                     return (T)(object)Core.ReadFloat(Address);
                 else if (type == typeof(string))

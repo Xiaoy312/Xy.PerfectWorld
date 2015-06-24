@@ -9,7 +9,7 @@
                  ResizeMode="NoResize"
                  SizeToContent="WidthAndHeight"
                  WindowStyle="ToolWindow"
-                 Title="Xy.PW">
+                 Title="Xy.PW" Topmost="True">
     <mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands>
             <Button Click="ShowSetting">

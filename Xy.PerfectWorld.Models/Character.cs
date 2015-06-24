@@ -19,7 +19,7 @@ namespace Xy.PerfectWorld.Models
         public Pointer CharacterBase { get; }
 
         [Hexadecimal]
-        public Pointer<int> ID { get { return CharacterBase + 0x43C; } }
+        public Pointer<uint> ID { get { return CharacterBase + 0x43C; } }
         public Pointer<int> Level { get { return CharacterBase + 0x448; } }
         public Pointer<Cultivation> Cultivation { get { return CharacterBase + 0x44C; } }
 
@@ -59,9 +59,9 @@ namespace Xy.PerfectWorld.Models
         public Pointer<MoveMethod> MoveMethod { get { return CharacterBase + 0x64C; } }
 
         [Hexadecimal]
-        public Pointer<int> SelectedTargetID { get { return CharacterBase + 0xA18; } }
+        public Pointer<uint> SelectedTargetID { get { return CharacterBase + 0xA18; } }
         [Hexadecimal]
-        public Pointer<int> MouseOverTargetID { get { return CharacterBase + 0xA30; } }
+        public Pointer<uint> MouseOverTargetID { get { return CharacterBase + 0xA30; } }
     }
 
     public enum Cultivation

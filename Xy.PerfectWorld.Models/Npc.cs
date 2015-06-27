@@ -38,6 +38,31 @@ namespace Xy.PerfectWorld.Models
                 yield return new Npc(core, iterator + 4);
             }
         }
+
+        public Npc this[int index]
+        {
+            get
+            {
+                return new Npc(FirstItem + index * 4);
+            }
+        }
+
+        public Npc GetItemByID(uint id)
+        {
+            // check if target is a mob
+            if (id >= 0x80000000)
+            {
+                var index = id % MaxSize.Value;
+                var npc = this[(int)index];
+
+                if (npc.NpcBase.Value != 0 && npc.UniqueID.Value == id)
+                {
+                    return npc;
+                }
+            }
+
+            return null;
+        }
     }
     public class Npc : Entity
     {

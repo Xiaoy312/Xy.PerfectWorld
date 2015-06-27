@@ -81,7 +81,7 @@
     <Compile Include="Character.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameModel.cs" />
-    <Compile Include="Loot.cs" />
+    <Compile Include="GroundItem.cs" />
     <Compile Include="Npc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

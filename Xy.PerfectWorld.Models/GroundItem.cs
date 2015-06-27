@@ -62,7 +62,7 @@ namespace Xy.PerfectWorld.Models
         public Pointer<float> Z { get { return LootBase + 0x044; } }
 
         [Hexadecimal]
-        public Pointer<int> UniqueID { get { return LootBase + 0x010C; } }
+        public Pointer<uint> UniqueID { get { return LootBase + 0x010C; } }
         public Pointer<int> ItemID { get { return LootBase + 0x0110; } }
 
         public Pointer<CollectMethod> CollectMethod { get { return LootBase + 0x014C; } }

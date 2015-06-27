@@ -16,7 +16,7 @@ namespace Xy.PerfectWorld.Models
                 asm.Pushad();
 
                 asm.Push68(item.ItemID);
-                asm.Push68(item.UniqueID);
+                asm.Push68((int)item.UniqueID.Value);
 
                 asm.Mov_EDX_DWORD_Ptr(Game.GameBaseAddress);
                 asm.Mov_ECX_DWORD_Ptr_EDX_Add(0x20);
@@ -37,7 +37,7 @@ namespace Xy.PerfectWorld.Models
             {
                 asm.Pushad();
 
-                asm.Push68(npc.UniqueID);
+                asm.Push68((int)npc.UniqueID.Value);
 
                 asm.Mov_EAX_DWORD_Ptr(Game.GameBaseAddress);
                 asm.Mov_ECX_DWORD_Ptr_EAX_Add(0x20);

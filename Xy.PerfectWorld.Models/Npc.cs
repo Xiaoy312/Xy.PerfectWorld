@@ -55,7 +55,7 @@ namespace Xy.PerfectWorld.Models
         
         public Pointer<NpcType> NpcType { get { return NpcBase + 0x0B4; } }
         [Hexadecimal]
-        public Pointer<int> UniqueID { get { return NpcBase + 0x11C; } }
+        public Pointer<uint> UniqueID { get { return NpcBase + 0x11C; } }
         public Pointer<int> NpcID { get { return NpcBase + 0x120; } }
         public Pointer<int> Level { get { return NpcBase + 0x124; } }
         public Pointer<int> HP { get { return NpcBase + 0x12C; } }

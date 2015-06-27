@@ -79,6 +79,7 @@ namespace Xy.PerfectWorld.Models
         
         public Pointer<GB2312> ModelPath { get { return LootBase + 0x160; } }
         public Pointer<WString> Name { get { return LootBase + 0x0164; } }
+        public Pointer<byte> IsSelected { get { return LootBase + 0x0169; } }
 
         public override string ToString()
         {

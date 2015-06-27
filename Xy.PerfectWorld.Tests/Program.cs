@@ -12,24 +12,25 @@ namespace Xy.PerfectWorld.Tests
 {
     class Program
     {
+        static Core core;
+        static Game game;
         static void Main(string[] args)
         {
-            var core = Core.Attach(Process.GetProcessesByName("elementclient").First());
+            core = Core.Attach(Process.GetProcessesByName("elementclient").First());
+            game = new Game(core);
 
-            var game = new Game(core);
-            //game.DumpProperties();
+            //DebugLoot();
+            DebugCurrentTarget();
+        }
 
-            var character = new Character(game);
-            character.DumpProperties();
-            //new NpcContainer(game).DumpProperties();
-            //new GroundContainer(game).DumpProperties();
-
-            //new GroundContainer(game).GetItems();
-
-            foreach (var item in new GroundContainer(game).GetItems()
+        private static void DebugLoot()
+        {
+            var items = new GroundContainer(game).GetItems()
                 .OrderBy(x => x.ItemID)
                 .DistinctBy(x => x.ItemID)
-                )
+                ;
+
+            foreach (var item in items)
             {
                 switch (item.CollectMethod.Value)
                 {
@@ -47,10 +48,12 @@ namespace Xy.PerfectWorld.Tests
 
                 switch (item.ItemID.Value)
                 {
+                    case 0x5DC0: // LM$ Silver
+
                     case 0x527A: // Martial God·Ksitigarbha Stele
                     case 0x527B: // Martial God·Ksitigarbha Stone
                     case 0x527C: // Martial God·Steel Stele
-                    
+
                     case 0x527E: // Martial God·Virtuous Stele
                     case 0x527F: // Martial God·Virtuous Stone
                     case 0x5280: // Martial God·Manjushri Stele
@@ -63,11 +66,29 @@ namespace Xy.PerfectWorld.Tests
                     case 0x5287: // Martial God·Guanyin Stone
 
                     case 0xD6D9: // g17 Ember 
-                    case 0xD6DA: // g17 Pearl 
+                    case 0xD6DA: // g17 Pearl
                         continue;
                 }
 
                 Debug.WriteLine($"case 0x{item.ItemID.Value.ToString("X4")}: // {item.Name.Value}");
+            }
+        }
+        private static void DebugCurrentTarget()
+        {
+            var character = new Character(game);
+            var npcs = new NpcContainer(game);
+
+            var id = character.SelectedTargetID.Value;
+            // check if target is a mob
+            if (id >= 0x80000000)
+            {
+                var index = id % npcs.MaxSize.Value;
+                var npc = npcs[(int)index];
+
+                if (npc.NpcBase.Value != 0)
+                {
+
+                }
             }
         }
     }

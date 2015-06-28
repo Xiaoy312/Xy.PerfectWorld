@@ -38,8 +38,8 @@ namespace Xy.PerfectWorld.ViewModels
 
         public void RefreshGames()
         {
-            RunningGames.RemoveAll(
-                RunningGames.Where(x => x.Process.HasExited));
+            var exited = RunningGames.Where(x => x.Process.HasExited).ToList();
+            RunningGames.RemoveAll(exited);
 
             Process.GetProcessesByName("elementclient")
                 .Where(p => !RunningGames.Any(g => p.Id == g.Process.Id))

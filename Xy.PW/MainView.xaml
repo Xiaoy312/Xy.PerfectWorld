@@ -34,7 +34,7 @@
             <StackPanel Grid.Row="0" Orientation="Horizontal">
                 <StackPanel.Resources>
                     <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
-                        <Setter Property="Margin" Value="0 0 10 0" />
+                        <Setter Property="Margin" Value="10 0 10 0" />
                     </Style>
                 </StackPanel.Resources>
 
@@ -61,14 +61,13 @@
                 </CheckBox>
             </StackPanel>
 
-            <StatusBar Grid.Row="1" Visibility="Collapsed">
+            <StatusBar Grid.Row="1">
                 <StatusBar.Resources>
                     <Style TargetType="StatusBarItem" BasedOn="{StaticResource {x:Type StatusBarItem}}">
                         <Setter Property="FontSize" Value="10" />
                     </Style>
                 </StatusBar.Resources>
-                <StatusBarItem Content="Target:" />
-                <StatusBarItem Content="12,123,123,123" />
+                <StatusBarItem Content="{Binding TargetInfo}" />
             </StatusBar>
         </Grid>
     </mah:MetroContentControl>

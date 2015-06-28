@@ -38,8 +38,18 @@ namespace Xy.PerfectWorld.ViewModels
             set { this.RaiseAndSetIfChanged(ref autoLootEnabled, value); }
         }
         #endregion
+        #region TargetInfo
+        string targetInfo;
+        public string TargetInfo
+        {
+            get { return targetInfo; }
+            set { this.RaiseAndSetIfChanged(ref targetInfo, value); }
+        }
+        #endregion
+
 
         private bool lootedInLastLoop;
+        private Npc currentTarget;
 
         private AppViewModel()
         {
@@ -48,6 +58,7 @@ namespace Xy.PerfectWorld.ViewModels
 
             InitializeAutoCombat();
             InitializeAutoLoot();
+            InitializeStatusBar();
         }
 
         private void InitializeAutoCombat()
@@ -66,6 +77,7 @@ namespace Xy.PerfectWorld.ViewModels
                 // reacquire closest target, before attacking
                 var npc = new NpcContainer(AttachedGame.Game).GetItems()
                     .Where(x => x.NpcType.Value == NpcType.Monster)
+                    .Where(x => x.Level.Value > 100)
                     .OrderBy(x => x.RelativeDistance.Value)
                     .FirstOrDefault();
                 if (npc.UniqueID != character.SelectedTargetID)
@@ -78,6 +90,7 @@ namespace Xy.PerfectWorld.ViewModels
                 Debug.WriteLine($"An exception occured in {nameof(AutoLootPerform)} : {e}");
             }
         }
+
         private void InitializeAutoLoot()
         {
             Observable.Interval(TimeSpan.FromMilliseconds(250))
@@ -89,7 +102,7 @@ namespace Xy.PerfectWorld.ViewModels
             try
             {
                 const float MaxLootRange = 10.0f;
-                var canLootGold = new Character(AttachedGame.Game).Gold != 200000000; 
+                var canLootGold = new Character(AttachedGame.Game).Gold != 200000000;
                 var ground = new GroundContainer(AttachedGame.Game);
 
                 var item = ground.GetItems()
@@ -120,6 +133,8 @@ namespace Xy.PerfectWorld.ViewModels
 
             switch (item.ItemID.Value)
             {
+                case 0x5DC0: // LM$ Silver
+
                 case 0x527A: // Martial God·Ksitigarbha Stele
                 case 0x527B: // Martial God·Ksitigarbha Stone
                 case 0x527C: // Martial God·Steel Stele
@@ -137,10 +152,51 @@ namespace Xy.PerfectWorld.ViewModels
 
                 case 0xD6D9: // g17 Ember
                 case 0xD6DA: // g17 Pearl
+
+                case 0x662C: // Raw Crystal
+                case 0x64DC: // Rapture Crystal
+                case 0x64DD: // Uncanny Crystal
+                case 0x6610: // Soul Crystal
+                case 0xAD50: // Beast Blood
+                case 0xAD27: // Mystic Fiber
+                case 0xAD28: // Purify Crystal
+                case 0xC5A0: // G18 Ore
                     return true;
             }
 
             return false;
+        }
+
+        private void InitializeStatusBar()
+        {
+            Observable.Interval(TimeSpan.FromMilliseconds(250))
+                .Where(_ => (AttachedGame?.Status ?? GameStatus.Offline) == GameStatus.LoggedIn)
+                .Subscribe(_ => UpdateTarget());
+            Observable.Interval(TimeSpan.FromMilliseconds(125))
+                .Where(_ => (AttachedGame?.Status ?? GameStatus.Offline) == GameStatus.LoggedIn)
+                .Subscribe(_ => UpdateTargetInfo());
+        }
+        private void UpdateTarget()
+        {
+            var character = new Character(AttachedGame.Game);
+            var npcs = new NpcContainer(AttachedGame.Game);
+
+            currentTarget = npcs.GetItemByID(character.SelectedTargetID);
+        }
+        private void UpdateTargetInfo()
+        {
+            // save a temp instance to prevent race condition from UpdateTarget()
+            var target = currentTarget;
+
+            if (target == null || target.NpcBase.Value == 0)
+            {
+                TargetInfo = "Target: null";
+                return;
+            }
+
+            TargetInfo = string.Format("Target: {0:P2} {1:N0}",
+                (double)target.HP.Value / target.MaxHP.Value,
+                target.HP.Value);
         }
     }
 

@@ -13,22 +13,29 @@ namespace Xy.PW
     {
         private const string LicenseDataUrl= "https://docs.google.com/spreadsheets/d/1kXuUUcXc8XRTwjn35W1cm0QCqGK4moyD8GnM9K5mXwY/pubhtml";
 
-        public static string GetCpuID()
+        public static string GetHardwareID()
         {
-            return new ManagementClass("win32_processor")
+            var processorIDs = new ManagementClass("win32_processor")
                 .GetInstances()
                 .Cast<ManagementObject>()
-                .Select(x => x.Properties["processorID"].Value.ToString())
-                .Select(x => Regex.Replace(x, ".{4}(?!$)", "$0-"))
-                .FirstOrDefault() ?? "404-CpuID-Not-Found";
+                .Select(x => x.GetPropertyValue("ProcessorID"));
+            var volumeSNs = new ManagementClass("Win32_LogicalDisk")
+                .GetInstances()
+                .Cast<ManagementObject>()
+                .Select(x => x.GetPropertyValue("VolumeSerialNumber"));
+
+            var hwid = Enumerable.Concat(processorIDs, volumeSNs)
+                .Aggregate(17, (accumulate, x) => accumulate * 31 + x?.GetHashCode() ?? 0);
+
+            return Regex.Replace(hwid.ToString("X"), ".{4}(?!$)", "$0-");
         }
 
         public static bool CheckLicense()
         {
-            var cpuID = GetCpuID();
+            var hwid = GetHardwareID();
             return CQ.CreateFromUrl(LicenseDataUrl)["td"]
                 .Map(x => x.Cq().Text())
-                .Any(x => x == cpuID);
+                .Any(x => x == hwid);
         }
     }
 }

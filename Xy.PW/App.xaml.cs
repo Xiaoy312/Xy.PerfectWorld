@@ -31,9 +31,9 @@ namespace Xy.PW
 #endif
             if (!License.CheckLicense())
             {
-                var cpuID = License.GetCpuID();
-                Clipboard.SetText(cpuID);
-                MessageBox.Show($"Please contact your administrator with your CpuID. It has been copied to your clipbaord.\n CpuID : {cpuID}", "Unlicensed Software", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                var hwid = License.GetHardwareID();
+                Clipboard.SetText(hwid);
+                MessageBox.Show($"Please contact your administrator with your Hardware ID. It has been copied to your clipbaord.\n HardwareID : {hwid}", "Unlicensed Software", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 Shutdown();
             }
 
@@ -48,12 +48,6 @@ namespace Xy.PW
 
             var view = new MainView() { DataContext = AppViewModel.Instance };
             view.Show();
-
-
-            //var view = this.Windows.OfType<SettingView>().SingleOrDefault() ??
-            //    new SettingView() { DataContext = AppViewModel.SettingVM };
-
-            //view.Show();
         }
 
         private void ReportUnhandledException(Exception exception)

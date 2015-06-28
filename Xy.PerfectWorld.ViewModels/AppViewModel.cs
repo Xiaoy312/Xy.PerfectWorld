@@ -194,8 +194,10 @@ namespace Xy.PerfectWorld.ViewModels
                 return;
             }
 
+            var maxHP = target.MaxHP;
+            
             TargetInfo = string.Format("Target: {0:P2} {1:N0}",
-                (double)target.HP.Value / target.MaxHP.Value,
+                maxHP != 0 ? (double)target.HP.Value / target.MaxHP.Value : 0,
                 target.HP.Value);
         }
     }

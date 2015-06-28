@@ -25,10 +25,19 @@ namespace Xy.PW
 #else
             if (Environment.UserName != "Xiaoy")
             {
-                MessageBox.Show("Tell Xiaoy that he shipped the wrong the version.", this.GetType().Namespace, MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Please contact your administrator.", "Incorrect Software Version", MessageBoxButton.OK, MessageBoxImage.Information);
                 Shutdown();
             }
 #endif
+            if (!License.CheckLicense())
+            {
+                var cpuID = License.GetCpuID();
+                Clipboard.SetText(cpuID);
+                MessageBox.Show($"Please contact your administrator with your CpuID. It has been copied to your clipbaord.\n CpuID : {cpuID}", "Unlicensed Software", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                Shutdown();
+            }
+
+
             // check admin rights
             var isAdmin = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
             if (!isAdmin)

@@ -38,6 +38,7 @@ namespace Xy.PerfectWorld.Models
         public Pointer EquipmentBase { get { return CharacterBase + 0xB50; } }
         public Pointer PetBase { get { return CharacterBase + 0xBCC; } }
         public Pointer SkillBase { get { return CharacterBase + 0xBDC; } }
+        public Pointer<int> SkillCount { get { return CharacterBase + 0xBE0; } }
     }
 
     public enum GameStatus

@@ -20,7 +20,8 @@ namespace Xy.PerfectWorld.Tests
             game = new Game(core);
 
             //DebugLoot();
-            DebugCurrentTarget();
+            //DebugCurrentTarget();
+            DebugSkill();
         }
 
         private static void DebugLoot()
@@ -89,6 +90,16 @@ namespace Xy.PerfectWorld.Tests
                 {
 
                 }
+            }
+        }
+        private static void DebugSkill()
+        {
+            var skillbook = new SkillBook(game);
+            skillbook.DumpProperties();
+
+            foreach (var skill in skillbook.GetItems())
+            {
+                Debug.WriteLine(skill);
             }
         }
     }

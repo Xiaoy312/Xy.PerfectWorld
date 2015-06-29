@@ -84,6 +84,7 @@
     <Compile Include="GroundItem.cs" />
     <Compile Include="Npc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Skill.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Xy.DataAnalysis\Xy.DataAnalysis.csproj">

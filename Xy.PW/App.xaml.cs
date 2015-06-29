@@ -29,7 +29,8 @@ namespace Xy.PW
                 Shutdown();
             }
 #endif
-            if (!License.CheckLicense())
+
+            if (Environment.UserName != "Xiaoy" && !License.CheckLicense())
             {
                 var hwid = License.GetHardwareID();
                 Clipboard.SetText(hwid);

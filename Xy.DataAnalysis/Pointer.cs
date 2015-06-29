@@ -61,6 +61,30 @@ namespace Xy.DataAnalysis
             return !(GetAddress.Body is BinaryExpression) ? 0 :
                 Expression.Lambda<Func<int>>((GetAddress.Body as BinaryExpression).Right).Compile().Invoke();
         }
+        
+        /// <summary>
+        /// Get the offsets that lead up to this pointer
+        /// </summary>
+        /// <param name="depth">number of offsets to return</param>
+        /// <returns></returns>
+        public List<int> GetOffsets(int depth)
+        {
+            var result = new List<int>();
+            var pointer = this as PointerBase;
+            
+            for (int i = 0; i < depth; i++)
+            {
+                result.Add(pointer.GetOffset());
+
+                var binaryExpression = pointer.GetAddress.Body as BinaryExpression;
+                var leftOperand = binaryExpression.Left as MemberExpression;
+
+                pointer = Expression.Lambda<Func<PointerBase>>(leftOperand.Expression).Compile().Invoke();
+            }
+
+            result.Reverse();
+            return result;
+        }
 
         public object GetValue()
         {

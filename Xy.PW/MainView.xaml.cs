@@ -35,5 +35,10 @@ namespace Xy.PW
 
             view.Show();
         }
+
+        private void Minimize(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
     }
 }

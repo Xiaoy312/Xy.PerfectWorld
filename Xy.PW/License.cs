@@ -25,7 +25,7 @@ namespace Xy.PW
                 .Select(x => x.GetPropertyValue("VolumeSerialNumber"));
 
             var hwid = Enumerable.Concat(processorIDs, volumeSNs)
-                .Aggregate(17, (accumulate, x) => accumulate * 31 + x?.GetHashCode() ?? 0);
+                .Aggregate(17, (accumulate, x) => accumulate * 31 + (x?.GetHashCode() ?? 0));
 
             return Regex.Replace(hwid.ToString("X"), ".{4}(?!$)", "$0-");
         }

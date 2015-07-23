@@ -47,7 +47,6 @@ namespace Xy.PerfectWorld.ViewModels
         }
         #endregion
 
-
         private bool lootedInLastLoop;
         private Npc currentTarget;
 
@@ -73,15 +72,31 @@ namespace Xy.PerfectWorld.ViewModels
             try
             {
                 var character = new Character(AttachedGame.Game);
+                var mobs = new NpcContainer(AttachedGame.Game).GetItems()
+                    .Where(x => x.NpcType.Value == NpcType.Monster);
+                IEnumerable<Npc> targets = null; 
+
+                switch(SettingVM.SearchBehavior)
+                {
+                    case AutoCombatSearchBehavior.SearchAndDestroy:
+                        targets = mobs;
+                        break;
+
+                    case AutoCombatSearchBehavior.SelfDefence:
+                        targets = Enumerable.Empty<Npc>();
+                        break;
+
+                    case AutoCombatSearchBehavior.Custom:
+                        targets = mobs.Where(x => SettingVM.TargetList.Contains(x.Name.Value.Value));
+                        break;
+                }
 
                 // reacquire closest target, before attacking
-                var npc = new NpcContainer(AttachedGame.Game).GetItems()
-                    .Where(x => x.NpcType.Value == NpcType.Monster)
-                    .Where(x => x.Level.Value > 100)
+                var mob = targets
                     .OrderBy(x => x.RelativeDistance.Value)
                     .FirstOrDefault();
-                if (npc.UniqueID != character.SelectedTargetID)
-                    npc.Target();
+                if (mob != null && mob.UniqueID != character.SelectedTargetID)
+                    mob.Target();
 
                 character.Attack();
             }

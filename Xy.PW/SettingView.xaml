@@ -1,28 +1,74 @@
 ﻿<mah:MetroWindow x:Class="Xy.PW.SettingView"
                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:converter="clr-namespace:Xy.PW.Converters"
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  xmlns:local="clr-namespace:Xy.PW"
-                 mc:Ignorable="d"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:vm="clr-namespace:Xy.PerfectWorld.ViewModels;assembly=Xy.PerfectWorld.ViewModels"
+                 x:Name="Setting"
                  Title="Setting"
-                 x:Name="Setting">
-    <mah:MetroContentControl>
+                 mc:Ignorable="d">
+    <mah:MetroWindow.Resources>
+        <converter:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
+        <Style BasedOn="{StaticResource AccentedSquareButtonStyle}" TargetType="Button" />
+    </mah:MetroWindow.Resources>
+    <mah:MetroContentControl Padding="5">
         <mah:MetroAnimatedSingleRowTabControl>
             <TabItem Header="Client">
-                <DataGrid ItemsSource="{Binding RunningGames}"
-                          AutoGenerateColumns="False" IsReadOnly="True"
+                <DataGrid AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          ItemsSource="{Binding RunningGames}"
                           SelectedValue="{Binding SelectedGame}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="PID" Binding="{Binding Process.Id}" />
-                        <DataGridTextColumn Header="GameStatus" Binding="{Binding Status}" />
-                        <DataGridTextColumn Header="Player" Binding="{Binding Player}" />
+                        <DataGridTextColumn Binding="{Binding Process.Id}" Header="PID" />
+                        <DataGridTextColumn Binding="{Binding Status}" Header="GameStatus" />
+                        <DataGridTextColumn Binding="{Binding Player}" Header="Player" />
                     </DataGrid.Columns>
                 </DataGrid>
             </TabItem>
-            <TabItem Header="Hack" />
-            <TabItem Header="Auto" />
+            <TabItem Header="AutoCombat">
+                <StackPanel>
+                    <RadioButton Content="Search and destroy" IsChecked="{Binding SearchBehavior, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:AutoCombatSearchBehavior.SearchAndDestroy}}" />
+                    <RadioButton Content="Self defence" IsChecked="{Binding SearchBehavior, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:AutoCombatSearchBehavior.SelfDefence}}" />
+                    <RadioButton Content="Custom" IsChecked="{Binding SearchBehavior, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:AutoCombatSearchBehavior.Custom}}" />
+
+                    <Expander Header="Custom"
+                              IsEnabled="{Binding SearchBehavior,
+                                                  Converter={StaticResource EnumToBooleanConverter},
+                                                  ConverterParameter={x:Static vm:AutoCombatSearchBehavior.Custom}}"
+                              IsExpanded="True">
+                        <StackPanel>
+                            <UniformGrid Rows="1">
+                                <DockPanel>
+                                    <Button Command="{Binding RefreshNearbyMonsters}"
+                                            Content="Refresh List"
+                                            DockPanel.Dock="Top" />
+                                    <TextBox DockPanel.Dock="Bottom"
+                                             Style="{DynamicResource ButtonCommandMetroTextBox}"
+                                             Text="{Binding MonsterName}"
+                                             mah:TextBoxHelper.ButtonCommand="{Binding AddToTargetList}">
+                                        <mah:TextBoxHelper.ButtonContent>
+                                            <Rectangle Width="15" Height="15">
+                                                <Rectangle.OpacityMask>
+                                                    <VisualBrush Stretch="Uniform" Visual="{StaticResource AccountPlus}" />
+                                                </Rectangle.OpacityMask>
+                                            </Rectangle>
+                                        </mah:TextBoxHelper.ButtonContent>
+                                    </TextBox>
+                                    <ListView ItemsSource="{Binding NearbyMonsters}" SelectedItem="{Binding MonsterName, Mode=OneWayToSource}" />
+                                </DockPanel>
+                                <ListView ItemsSource="{Binding TargetList}" />
+                            </UniformGrid>
+                            <UniformGrid Rows="1">
+                                <Button Command="{Binding ExportTargetList}" Content="Export" />
+                                <Button Command="{Binding ImportTargetList}" Content="Import" />
+                            </UniformGrid>
+                        </StackPanel>
+                    </Expander>
+                </StackPanel>
+            </TabItem>
         </mah:MetroAnimatedSingleRowTabControl>
     </mah:MetroContentControl>
 </mah:MetroWindow>

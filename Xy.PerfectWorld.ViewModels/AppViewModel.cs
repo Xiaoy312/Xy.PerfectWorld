@@ -98,7 +98,8 @@ namespace Xy.PerfectWorld.ViewModels
                 if (mob != null && mob.UniqueID != character.SelectedTargetID)
                     mob.Target();
 
-                character.Attack();
+                if (character.SelectedTargetID != 0)
+                    character.Attack();
             }
             catch (Exception e)
             {

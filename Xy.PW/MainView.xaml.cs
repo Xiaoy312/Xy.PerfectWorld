@@ -30,10 +30,19 @@ namespace Xy.PW
 
         private void ShowSetting(object sender, RoutedEventArgs e)
         {
-            var view = Application.Current.Windows.OfType<SettingView>().SingleOrDefault() ??
-                new SettingView() { DataContext = AppViewModel.Instance.SettingVM };
+            var view = Application.Current.Windows.OfType<SettingView>().SingleOrDefault();
+            if (view == null)
+            {
+                view = new SettingView() { DataContext = AppViewModel.Instance.SettingVM };
+                view.Show();
+                return;
+            }
 
-            view.Show();
+            if (view.WindowState == WindowState.Minimized)
+                view.WindowState = WindowState.Normal;
+
+            if (!view.Topmost)
+                view.Topmost = !(view.Topmost = !view.Topmost);
         }
 
         private void Minimize(object sender, RoutedEventArgs e)

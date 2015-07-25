@@ -75,7 +75,8 @@ namespace Xy.PerfectWorld.ViewModels
             RefreshNearbyMonsters.Subscribe(results =>
             {
                 NearbyMonsters.Clear();
-                NearbyMonsters.AddRange(results);
+                foreach (var item in results)
+                    NearbyMonsters.Add(item);
             });
 
             var canAddToTarget = this.WhenAnyValue(x => x.MonsterName, x => !string.IsNullOrWhiteSpace(x));

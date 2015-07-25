@@ -117,7 +117,7 @@ namespace Xy.PerfectWorld.ViewModels
                 if (TargetList.Any())
                 {
                     // FIXME: Lord forgive me, for I've broken MVVM
-                    var window = System.Windows.Application.Current.MainWindow as MetroWindow;
+                    var window = System.Windows.Application.Current.Windows.OfType<MetroWindow>().FirstOrDefault(x => x.DataContext == this);
                     var result = await window.ShowMessageAsync("Confirmation",
                         "Do you wish to merge the current list with this list?",
                         MessageDialogStyle.AffirmativeAndNegativeAndSingleAuxiliary,

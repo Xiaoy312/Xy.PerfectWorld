@@ -19,17 +19,34 @@ namespace Xy.PW
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            // show an error report for release version, and prevent wrong version being shipped
 #if !DEBUG
+            // log unhandled exception
             DispatcherUnhandledException += (s, args) => ReportUnhandledException(args.Exception);
-#else
+#endif
+
+            BuildVersionCheck();
+            LicenseValidation();
+            AdministrativeRightsCheck();
+
+            var view = new MainView() { DataContext = AppViewModel.Instance };
+            view.Show();
+        }
+
+        /// <summary>
+        /// Show an error report for release version preventing the wrong build being shipped
+        /// </summary>
+        private void BuildVersionCheck()
+        {
+#if DEBUG
             if (Environment.UserName != "Xiaoy")
             {
                 MessageBox.Show("Please contact your administrator.", "Incorrect Software Version", MessageBoxButton.OK, MessageBoxImage.Information);
                 Shutdown();
             }
 #endif
-
+        }
+        private void LicenseValidation()
+        {
             if (Environment.UserName != "Xiaoy" && !License.CheckLicense())
             {
                 var hwid = License.GetHardwareID();
@@ -37,20 +54,20 @@ namespace Xy.PW
                 MessageBox.Show($"Please contact your administrator with your Hardware ID. It has been copied to your clipbaord.\n HardwareID : {hwid}", "Unlicensed Software", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 Shutdown();
             }
-
-
-            // check admin rights
+        }
+        private void AdministrativeRightsCheck()
+        {
             var isAdmin = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
             if (!isAdmin)
             {
                 MessageBox.Show("XyPW requires administrative rights to work. Please restart as admin.", this.GetType().Namespace, MessageBoxButton.OK, MessageBoxImage.Information);
                 Shutdown();
             }
-
-            var view = new MainView() { DataContext = AppViewModel.Instance };
-            view.Show();
         }
 
+        /// <summary>
+        /// Show an error message for the exception and log in a file
+        /// </summary>
         private void ReportUnhandledException(Exception exception)
         {
             Func<Exception, XElement> convertToXml = null;

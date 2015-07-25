@@ -6,33 +6,39 @@
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  xmlns:local="clr-namespace:Xy.PW"
                  mc:Ignorable="d"
-                 x:Name="MainWindow" Title="Xy.PW"
+                 x:Name="MainWindow"
+                 Title="Xy.PW"
                  WindowStyle="ToolWindow"
-                 ResizeMode="NoResize" SizeToContent="WidthAndHeight">
+                 ResizeMode="NoResize"
+                 SizeToContent="WidthAndHeight"
+                 Topmost="True">
     <mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands>
-            <Button Click="ShowSetting"
-                    ToolTip="Show Setting Window">
-                <Rectangle Width="15" Height="15" 
-                           Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType=Button}}">
+            <Button Click="ShowSetting" ToolTip="Show Setting Window">
+                <Rectangle Width="15"
+                           Height="15"
+                           Fill="{Binding Path=Foreground,
+                                          RelativeSource={RelativeSource AncestorType=Button}}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Uniform" Visual="{StaticResource Setting}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </Button>
-            <ToggleButton IsChecked="{Binding Path=Topmost, ElementName=MainWindow}"
-                          ToolTip="Set topmost">
-                <Rectangle Width="15" Height="15"
-                           Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}">
+            <ToggleButton IsChecked="{Binding Path=Topmost, ElementName=MainWindow}" ToolTip="Set topmost">
+                <Rectangle Width="15"
+                           Height="15"
+                           Fill="{Binding Path=Foreground,
+                                          RelativeSource={RelativeSource AncestorType=ToggleButton}}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Uniform" Visual="{StaticResource Lock}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </ToggleButton>
-            <Button Click="Minimize"
-                    ToolTip="Minimize">
-                <Rectangle Width="15" Height="15" 
-                           Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType=Button}}">
+            <Button Click="Minimize" ToolTip="Minimize">
+                <Rectangle Width="15"
+                           Height="15"
+                           Fill="{Binding Path=Foreground,
+                                          RelativeSource={RelativeSource AncestorType=Button}}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Uniform" Visual="{StaticResource Minimize}" />
                     </Rectangle.OpacityMask>

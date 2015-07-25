@@ -247,7 +247,6 @@ namespace Xy.DataAnalysis
         }
         #endregion
 
-
         // hide default public constructor
         private Pointer(Pointer pointer) : base(pointer.Core, pointer.GetAddress)
         {
@@ -274,6 +273,20 @@ namespace Xy.DataAnalysis
         public static bool operator !=(Pointer<T> a, Pointer<T> b)
         {
             return !(a == b);
+        }
+        public override bool Equals(object obj)
+        {
+            if (obj == null) return false;
+            if (ReferenceEquals(this, obj)) return true;
+
+            if (obj is PointerBase || (obj as PointerBase).Address == Address)
+                return true;
+
+            return false;
+        }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }

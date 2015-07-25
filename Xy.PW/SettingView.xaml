@@ -50,7 +50,9 @@
                                              Text="{Binding MonsterName}"
                                              mah:TextBoxHelper.ButtonCommand="{Binding AddToTargetList}">
                                         <mah:TextBoxHelper.ButtonContent>
-                                            <Rectangle Width="15" Height="15">
+                                            <Rectangle Width="15"
+                                                       Height="15"
+                                                       Fill="Black">
                                                 <Rectangle.OpacityMask>
                                                     <VisualBrush Stretch="Uniform" Visual="{StaticResource AccountPlus}" />
                                                 </Rectangle.OpacityMask>
@@ -59,11 +61,20 @@
                                     </TextBox>
                                     <ListView ItemsSource="{Binding NearbyMonsters}" SelectedItem="{Binding MonsterName, Mode=OneWayToSource}" />
                                 </DockPanel>
-                                <ListView ItemsSource="{Binding TargetList}" />
+                                <DockPanel>
+                                    <Button DockPanel.Dock="Top"
+                                            Content="Clear list"
+                                            Command="{Binding ClearTargetList}" />
+                                    <ListView ItemsSource="{Binding TargetList}" SelectedItem="{Binding SelectedTarget}">
+                                        <ListView.InputBindings>
+                                            <KeyBinding Key="Delete" Command="{Binding Path=RemoveSelectedTarget}" />
+                                        </ListView.InputBindings>
+                                    </ListView>
+                                </DockPanel>
                             </UniformGrid>
-                            <UniformGrid Rows="1">
-                                <Button Command="{Binding ExportTargetList}" Content="Export" />
-                                <Button Command="{Binding ImportTargetList}" Content="Import" />
+                            <UniformGrid Rows="1" Margin="0,15,0,0">
+                                <Button Content="Export" Command="{Binding ExportTargetList}" />
+                                <Button Content="Import" Command="{Binding ImportTargetList}" />
                             </UniformGrid>
                         </StackPanel>
                     </Expander>

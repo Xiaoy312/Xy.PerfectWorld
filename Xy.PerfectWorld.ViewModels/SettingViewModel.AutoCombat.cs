@@ -34,7 +34,7 @@ namespace Xy.PerfectWorld.ViewModels
             set { this.RaiseAndSetIfChanged(ref monsterName, value); }
         }
         #endregion
-        #region public string SelectedCustomTarget
+        #region public string SelectedTarget
         string selectedTarget;
         public string SelectedTarget
         {
@@ -90,6 +90,10 @@ namespace Xy.PerfectWorld.ViewModels
             var canClearTargetList = TargetList.CountChanged.Select(x => x != 0);
             ClearTargetList = ReactiveCommand.Create(canClearTargetList);
             ClearTargetList.Subscribe(_ => TargetList.Clear());
+
+            var canRemoveSelectedTarget = this.WhenAnyValue(x => x.SelectedTarget, x => !string.IsNullOrWhiteSpace(x));
+            RemoveSelectedTarget = ReactiveCommand.Create(canRemoveSelectedTarget);
+            RemoveSelectedTarget.Subscribe(_ => TargetList.Remove(selectedTarget));
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
             var canExportTargetList = TargetList.CountChanged.Select(x => x != 0);

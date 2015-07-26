@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
-using MoreLinq;
 using ReactiveUI;
+using Splat;
 using Xy.PerfectWorld.Models;
+using Xy.PerfectWorld.Services;
 
 namespace Xy.PerfectWorld.ViewModels
 {
@@ -96,6 +93,7 @@ namespace Xy.PerfectWorld.ViewModels
             RemoveSelectedTarget.Subscribe(_ => TargetList.Remove(selectedTarget));
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+            var dialogService = Locator.Current.GetService<IDialogService>();
             var canExportTargetList = TargetList.CountChanged.Select(x => x != 0);
             ExportTargetList = ReactiveCommand.CreateAsyncTask(canExportTargetList, async _ =>
             {
@@ -106,8 +104,7 @@ namespace Xy.PerfectWorld.ViewModels
                 using (var stream = dialog.OpenFile())
                     serializer.Serialize(stream, TargetList.ToList());
             });
-            ExportTargetList.ThrownExceptions.Subscribe(DisplayException);
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+            ExportTargetList.ThrownExceptions.Subscribe(dialogService.DisplayExceptionOn<SettingViewModel>);
 
             ImportTargetList = ReactiveCommand.CreateAsyncTask(async _ =>
             {
@@ -117,20 +114,21 @@ namespace Xy.PerfectWorld.ViewModels
                 if (TargetList.Any())
                 {
                     // FIXME: Lord forgive me, for I've broken MVVM
-                    var window = System.Windows.Application.Current.Windows.OfType<MetroWindow>().FirstOrDefault(x => x.DataContext == this);
-                    var result = await window.ShowMessageAsync("Confirmation",
+                    var result = await dialogService.ShowMessageDialogOnAsync<SettingViewModel>("Confirmation",
                         "Do you wish to merge the current list with this list?",
-                        MessageDialogStyle.AffirmativeAndNegativeAndSingleAuxiliary,
-                        new MetroDialogSettings()
-                        {
-                            AffirmativeButtonText = "Merge them",
-                            NegativeButtonText = "Keep new list",
-                            FirstAuxiliaryButtonText = "Cancel, keep current list",
-                        });
-                    if (result == MessageDialogResult.Negative)
-                        TargetList.Clear();
-                    else if (result == MessageDialogResult.FirstAuxiliary)
-                        return;
+                        "Merge them",
+                        "Keep new list",
+                        "Cancel, keep current list");
+                    switch (result)
+                    {
+                        case DialogResult.Affirmative:
+                            break;
+                        case DialogResult.Negative:
+                            TargetList.Clear();
+                            break;
+                        case DialogResult.FirstAuxiliary:
+                            return;
+                    }
                 }
 
                 var serializer = new XmlSerializer(typeof(List<string>));
@@ -142,7 +140,8 @@ namespace Xy.PerfectWorld.ViewModels
                             TargetList.Add(item);
                 }
             });
-            ImportTargetList.ThrownExceptions.Subscribe(DisplayException);
+            ImportTargetList.ThrownExceptions.Subscribe(dialogService.DisplayExceptionOn<SettingViewModel>);
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         }
 
         private const string TargetListFileFormat = "Target List|*.targets";

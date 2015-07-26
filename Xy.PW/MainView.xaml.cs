@@ -15,39 +15,42 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Xy.PerfectWorld.ViewModels;
 using MahApps.Metro.Controls.Dialogs;
+using ReactiveUI;
 
 namespace Xy.PW
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainView : MetroWindow
+    public partial class MainView : MetroWindow, IViewFor<MainViewModel>
     {
         public MainView()
         {
             InitializeComponent();
-        }
 
-        private void ShowSetting(object sender, RoutedEventArgs e)
-        {
-            var view = Application.Current.Windows.OfType<SettingView>().SingleOrDefault();
-            if (view == null)
-            {
-                view = new SettingView() { DataContext = AppViewModel.Instance.SettingVM };
-                view.Show();
-                return;
-            }
-
-            if (view.WindowState == WindowState.Minimized)
-                view.WindowState = WindowState.Normal;
-
-            if (!view.Topmost)
-                view.Topmost = !(view.Topmost = !view.Topmost);
+            this.WhenAnyValue(x => x.ViewModel).BindTo(this, x => x.DataContext);
         }
 
         private void Minimize(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Minimized;
         }
+
+        #region IViewFor<MainViewModel> Members
+        public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
+            "ViewModel", typeof(MainViewModel), typeof(MainView), new PropertyMetadata(null));
+
+        public MainViewModel ViewModel
+        {
+            get { return (MainViewModel)GetValue(ViewModelProperty); }
+            set { SetValue(ViewModelProperty, value); }
+        }
+
+        object IViewFor.ViewModel
+        {
+            get { return ViewModel; }
+            set { ViewModel = (MainViewModel)value; }
+        }
+        #endregion
     }
 }

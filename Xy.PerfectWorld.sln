@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xy.PW", "Xy.PW\Xy.PW.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xy.PerfectWorld.ViewModels", "Xy.PerfectWorld.ViewModels\Xy.PerfectWorld.ViewModels.csproj", "{C2086562-E965-4654-863A-E938BC1861C5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xy.PerfectWorld.Services", "Xy.PerfectWorld.Services\Xy.PerfectWorld.Services.csproj", "{E5C08AB4-4E18-41A2-B8BE-DC6B61CFB719}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{C2086562-E965-4654-863A-E938BC1861C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2086562-E965-4654-863A-E938BC1861C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2086562-E965-4654-863A-E938BC1861C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5C08AB4-4E18-41A2-B8BE-DC6B61CFB719}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5C08AB4-4E18-41A2-B8BE-DC6B61CFB719}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5C08AB4-4E18-41A2-B8BE-DC6B61CFB719}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5C08AB4-4E18-41A2-B8BE-DC6B61CFB719}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Linq;
 using Xy.PerfectWorld.ViewModels;
+using ReactiveUI;
+using Splat;
+using Xy.PerfectWorld.Services;
 
 namespace Xy.PW
 {
@@ -28,8 +31,8 @@ namespace Xy.PW
             LicenseValidation();
             AdministrativeRightsCheck();
 
-            var view = new MainView() { DataContext = AppViewModel.Instance };
-            view.Show();
+            AppBootstrapper.Initialize();
+            AppBootstrapper.Run();
         }
 
         /// <summary>

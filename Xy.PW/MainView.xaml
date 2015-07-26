@@ -14,7 +14,7 @@
                  Topmost="True">
     <mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands>
-            <Button Click="ShowSetting" ToolTip="Show Setting Window">
+            <Button Command="{Binding ShowSetting}" ToolTip="Show Setting Window">
                 <Rectangle Width="15"
                            Height="15"
                            Fill="{Binding Path=Foreground,

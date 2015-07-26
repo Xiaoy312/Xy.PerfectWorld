@@ -1,19 +1,20 @@
-﻿using ReactiveUI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ReactiveUI;
+using Splat;
 using Xy.PerfectWorld.Models;
+using Xy.PerfectWorld.Services;
 
 namespace Xy.PerfectWorld.ViewModels
 {
-    public class AppViewModel : ReactiveObject
+    public class MainViewModel : ReactiveObject
     {
-        public static AppViewModel Instance = new AppViewModel();
-        public SettingViewModel SettingVM = new SettingViewModel();
+        private SettingViewModel settingVM = Locator.Current.GetService<SettingViewModel>();
 
         #region AttachedGame
         readonly ObservableAsPropertyHelper<GameModel> attachedGame;
@@ -50,10 +51,18 @@ namespace Xy.PerfectWorld.ViewModels
         private bool lootedInLastLoop;
         private Npc currentTarget;
 
-        private AppViewModel()
+        public ReactiveCommand<object> ShowSetting { get; private set; }
+
+        public MainViewModel()
         {
-            attachedGame = SettingVM.WhenAny(x => x.SelectedGame, x => x.Value)
+            attachedGame = settingVM.WhenAny(x => x.SelectedGame, x => x.Value)
                 .ToProperty(this, x => x.AttachedGame);
+
+            ShowSetting = ReactiveCommand.Create();
+            ShowSetting.Subscribe(_ =>
+            {
+                Locator.Current.GetService<IViewService>().ShowViewFor<SettingViewModel>();
+            });
 
             InitializeAutoCombat();
             InitializeAutoLoot();
@@ -76,7 +85,7 @@ namespace Xy.PerfectWorld.ViewModels
                     .Where(x => x.NpcType.Value == NpcType.Monster);
                 IEnumerable<Npc> targets = null; 
 
-                switch(SettingVM.SearchBehavior)
+                switch(settingVM.SearchBehavior)
                 {
                     case AutoCombatSearchBehavior.SearchAndDestroy:
                         targets = mobs;
@@ -87,7 +96,7 @@ namespace Xy.PerfectWorld.ViewModels
                         break;
 
                     case AutoCombatSearchBehavior.Custom:
-                        targets = mobs.Where(x => SettingVM.TargetList.Contains(x.Name.Value.Value));
+                        targets = mobs.Where(x => settingVM.TargetList.Contains(x.Name.Value.Value));
                         break;
                 }
 

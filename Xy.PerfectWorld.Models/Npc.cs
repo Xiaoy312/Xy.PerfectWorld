@@ -77,7 +77,11 @@ namespace Xy.PerfectWorld.Models
 
         [BaseAddress]
         public Pointer NpcBase { get; }
-        
+
+        public Pointer<float> X { get { return NpcBase + 0x03C; } }
+        public Pointer<float> Z { get { return NpcBase + 0x040; } }
+        public Pointer<float> Y { get { return NpcBase + 0x044; } }
+
         public Pointer<NpcType> NpcType { get { return NpcBase + 0x0B4; } }
         [Hexadecimal]
         public Pointer<uint> UniqueID { get { return NpcBase + 0x11C; } }

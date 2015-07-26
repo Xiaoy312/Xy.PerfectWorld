@@ -18,6 +18,10 @@ namespace Xy.PerfectWorld.Models
         [BaseAddress]
         public Pointer CharacterBase { get; }
 
+        public Pointer<float> X { get { return CharacterBase + 0x03C; } }
+        public Pointer<float> Z { get { return CharacterBase + 0x040; } }
+        public Pointer<float> Y { get { return CharacterBase + 0x044; } }
+
         [Hexadecimal]
         public Pointer<uint> ID { get { return CharacterBase + 0x43C; } }
         public Pointer<int> Level { get { return CharacterBase + 0x448; } }

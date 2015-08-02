@@ -23,29 +23,13 @@ namespace Xy.PerfectWorld.ViewModels
             set { this.RaiseAndSetIfChanged(ref searchBehavior, value); }
         }
         #endregion
-        #region public string MonsterName
-        string monsterName;
-        public string MonsterName
-        {
-            get { return monsterName; }
-            set { this.RaiseAndSetIfChanged(ref monsterName, value); }
-        }
-        #endregion
-        #region public string SelectedTarget
-        string selectedTarget;
-        public string SelectedTarget
-        {
-            get { return selectedTarget; }
-            set { this.RaiseAndSetIfChanged(ref selectedTarget, value); }
-        }
-        #endregion
         public ReactiveList<string> NearbyMonsters { get; set; }
         public ReactiveList<string> TargetList { get; set; }
 
+        public ReactiveCommand<object> AddTarget { get; set; }
+        public ReactiveCommand<object> RemoveTarget { get; set; }
         public ReactiveCommand<IEnumerable<string>> RefreshNearbyMonsters { get; set; }
-        public ReactiveCommand<object> AddToTargetList { get; set; }
         public ReactiveCommand<object> ClearTargetList { get; set; }
-        public ReactiveCommand<object> RemoveSelectedTarget { get; set; }
         public ReactiveCommand<Unit> ExportTargetList { get; set; }
         public ReactiveCommand<Unit> ImportTargetList { get; set; }
 
@@ -77,22 +61,22 @@ namespace Xy.PerfectWorld.ViewModels
                 foreach (var item in results)
                     NearbyMonsters.Add(item);
             });
-
-            var canAddToTarget = this.WhenAnyValue(x => x.MonsterName, x => !string.IsNullOrWhiteSpace(x));
-            AddToTargetList = ReactiveCommand.Create(canAddToTarget);
-            AddToTargetList.Subscribe(_ =>
+            
+            AddTarget = ReactiveCommand.Create();
+            AddTarget.Subscribe(x =>
             {
-                if (!TargetList.Contains(MonsterName))
-                    TargetList.Add(MonsterName);
+                var name = (string)x;
+
+                if (!TargetList.Contains(name))
+                    TargetList.Add(name);
             });
 
             var canClearTargetList = TargetList.CountChanged.Select(x => x != 0);
             ClearTargetList = ReactiveCommand.Create(canClearTargetList);
             ClearTargetList.Subscribe(_ => TargetList.Clear());
-
-            var canRemoveSelectedTarget = this.WhenAnyValue(x => x.SelectedTarget, x => !string.IsNullOrWhiteSpace(x));
-            RemoveSelectedTarget = ReactiveCommand.Create(canRemoveSelectedTarget);
-            RemoveSelectedTarget.Subscribe(_ => TargetList.Remove(selectedTarget));
+            
+            RemoveTarget = ReactiveCommand.Create();
+            RemoveTarget.Subscribe(name => TargetList.Remove((string)name));
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
             var dialogService = Locator.Current.GetService<IDialogService>();

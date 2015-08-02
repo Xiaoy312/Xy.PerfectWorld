@@ -9,7 +9,9 @@
                  xmlns:vm="clr-namespace:Xy.PerfectWorld.ViewModels;assembly=Xy.PerfectWorld.ViewModels"
                  x:Name="Setting"
                  Title="Setting"
-                 mc:Ignorable="d">
+                 mc:Ignorable="d"
+                 d:DesignWidth="701.167"
+                 d:DesignHeight="901.167">
     <mah:MetroWindow.Resources>
         <converter:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
         <Style BasedOn="{StaticResource AccentedSquareButtonStyle}" TargetType="Button" />
@@ -18,53 +20,124 @@
         <mah:MetroAnimatedSingleRowTabControl>
             <TabItem Header="AutoCombat">
                 <StackPanel>
-                    <RadioButton Content="Search and destroy" IsChecked="{Binding SearchBehavior, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:AutoCombatSearchBehavior.SearchAndDestroy}}" />
-                    <RadioButton Content="Self defence" IsChecked="{Binding SearchBehavior, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:AutoCombatSearchBehavior.SelfDefence}}" />
-                    <RadioButton Content="Custom" IsChecked="{Binding SearchBehavior, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:AutoCombatSearchBehavior.Custom}}" />
-
-                    <Expander Header="Custom"
+                    <GroupBox Header="Targeting Logics">
+                        <StackPanel>
+                            <RadioButton Content="Search and destroy" IsChecked="{Binding SearchBehavior, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:AutoCombatSearchBehavior.SearchAndDestroy}}" />
+                            <RadioButton Content="Self defence" IsChecked="{Binding SearchBehavior, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:AutoCombatSearchBehavior.SelfDefence}}" />
+                            <RadioButton Content="Custom target" IsChecked="{Binding SearchBehavior, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:AutoCombatSearchBehavior.Custom}}" />
+                        </StackPanel>
+                    </GroupBox>
+                    <Expander Header="Custom Target"
                               IsEnabled="{Binding SearchBehavior,
                                                   Converter={StaticResource EnumToBooleanConverter},
                                                   ConverterParameter={x:Static vm:AutoCombatSearchBehavior.Custom}}"
                               IsExpanded="True">
-                        <StackPanel>
-                            <UniformGrid Rows="1">
-                                <DockPanel>
-                                    <Button Command="{Binding RefreshNearbyMonsters}"
-                                            Content="Refresh List"
-                                            DockPanel.Dock="Top" />
-                                    <TextBox DockPanel.Dock="Bottom"
-                                             Style="{DynamicResource ButtonCommandMetroTextBox}"
-                                             Text="{Binding MonsterName}"
-                                             mah:TextBoxHelper.ButtonCommand="{Binding AddToTargetList}">
-                                        <mah:TextBoxHelper.ButtonContent>
-                                            <Rectangle Width="15"
-                                                       Height="15"
-                                                       Fill="Black">
-                                                <Rectangle.OpacityMask>
-                                                    <VisualBrush Stretch="Uniform" Visual="{StaticResource AccountPlus}" />
-                                                </Rectangle.OpacityMask>
-                                            </Rectangle>
-                                        </mah:TextBoxHelper.ButtonContent>
-                                    </TextBox>
-                                    <ListView ItemsSource="{Binding NearbyMonsters}" SelectedItem="{Binding MonsterName, Mode=OneWayToSource}" />
-                                </DockPanel>
-                                <DockPanel>
-                                    <Button DockPanel.Dock="Top"
-                                            Content="Clear list"
-                                            Command="{Binding ClearTargetList}" />
-                                    <ListView ItemsSource="{Binding TargetList}" SelectedItem="{Binding SelectedTarget}">
-                                        <ListView.InputBindings>
-                                            <KeyBinding Key="Delete" Command="{Binding Path=RemoveSelectedTarget}" />
-                                        </ListView.InputBindings>
-                                    </ListView>
-                                </DockPanel>
-                            </UniformGrid>
-                            <UniformGrid Rows="1" Margin="0,15,0,0">
-                                <Button Content="Export" Command="{Binding ExportTargetList}" />
-                                <Button Content="Import" Command="{Binding ImportTargetList}" />
-                            </UniformGrid>
-                        </StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.Column="0"
+                                   Grid.Row="0"
+                                   Content="Nearby Monsters : " />
+
+                            <Label Grid.Column="1"
+                                   Grid.Row="0"
+                                   Content="Target List : " />
+                            <DataGrid x:Name="NearbyMonstersDataGrid"
+                                      Grid.Column="0"
+                                      Grid.Row="1"
+                                      AutoGenerateColumns="False"
+                                      IsReadOnly="True"
+                                      ItemsSource="{Binding NearbyMonsters}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Monster Name"
+                                                        Width="*"
+                                                        Binding="{Binding}" />
+                                    <DataGridTemplateColumn Width="Auto">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Command="{Binding DataContext.AddTarget,
+                                                                          ElementName=NearbyMonstersDataGrid}"
+                                                        CommandParameter="{Binding}"
+                                                        Style="{StaticResource ChromelessButtonStyle}"
+                                                        ToolTip="Add to target list">
+                                                    <Rectangle Width="15"
+                                                               Height="15"
+                                                               Fill="{Binding Path=Foreground,
+                                                                              RelativeSource={RelativeSource AncestorType=Button}}">
+                                                        <Rectangle.OpacityMask>
+                                                            <VisualBrush Stretch="Uniform" Visual="{StaticResource AccountPlus}" />
+                                                        </Rectangle.OpacityMask>
+                                                    </Rectangle>
+                                                </Button>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <DataGrid x:Name="TargetListDataGrid"
+                                      Grid.Column="1"
+                                      Grid.Row="1"
+                                      AutoGenerateColumns="False"
+                                      IsReadOnly="True"
+                                      ItemsSource="{Binding TargetList}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Target"
+                                                        Width="*"
+                                                        Binding="{Binding}" />
+                                    <DataGridTemplateColumn Width="Auto">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Command="{Binding DataContext.RemoveTarget,
+                                                                          ElementName=TargetListDataGrid}"
+                                                        CommandParameter="{Binding}"
+                                                        Style="{StaticResource ChromelessButtonStyle}"
+                                                        ToolTip="Remove from target list">
+                                                    <Rectangle Width="15"
+                                                               Height="15"
+                                                               Fill="{Binding Path=Foreground,
+                                                                              RelativeSource={RelativeSource AncestorType=Button}}">
+                                                        <Rectangle.OpacityMask>
+                                                            <VisualBrush Stretch="Uniform" Visual="{StaticResource AccountMinus}" />
+                                                        </Rectangle.OpacityMask>
+                                                    </Rectangle>
+                                                </Button>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <Button Grid.Column="0"
+                                    Grid.Row="2"
+                                    Content="Refresh nearby target" 
+                                    Command="{Binding RefreshNearbyMonsters}"/>
+                            <Button Grid.Column="1"
+                                    Grid.Row="2"
+                                    Content="Clear Target List"
+                                    Command="{Binding ClearTargetList}" />
+
+                            <Separator Grid.ColumnSpan="2"
+                                       Grid.Row="3"
+                                       Margin="20, 5" />
+
+                            <Button Grid.Column="0"
+                                    Grid.Row="4"
+                                    Content="Export"
+                                    Command="{Binding ExportTargetList}" />
+                            <Button Grid.Column="1"
+                                    Grid.Row="4"
+                                    Content="Import"
+                                    Command="{Binding ImportTargetList}" />
+                        </Grid>
                     </Expander>
                 </StackPanel>
             </TabItem>

@@ -15,8 +15,6 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-
-
         <DataGrid Grid.Row="1"
                   x:Name="GameClientsDataGrid"
                   AutoGenerateColumns="False"

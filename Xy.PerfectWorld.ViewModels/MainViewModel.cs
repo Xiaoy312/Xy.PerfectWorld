@@ -15,14 +15,8 @@ namespace Xy.PerfectWorld.ViewModels
     public class MainViewModel : ReactiveObject
     {
         private SettingViewModel settingVM = Locator.Current.GetService<SettingViewModel>();
+        private GameModel attachedGame;
 
-        #region AttachedGame
-        readonly ObservableAsPropertyHelper<GameModel> attachedGame;
-        public GameModel AttachedGame
-        {
-            get { return attachedGame.Value; }
-        }
-        #endregion
         #region AutoCombatEnabled
         bool autoCombatEnabled = false;
         public bool AutoCombatEnabled
@@ -55,8 +49,7 @@ namespace Xy.PerfectWorld.ViewModels
 
         public MainViewModel()
         {
-            attachedGame = settingVM.WhenAny(x => x.SelectedGame, x => x.Value)
-                .ToProperty(this, x => x.AttachedGame);
+            attachedGame = Locator.Current.GetService<GameModel>();
 
             ShowSetting = ReactiveCommand.Create();
             ShowSetting.Subscribe(_ =>
@@ -72,7 +65,7 @@ namespace Xy.PerfectWorld.ViewModels
         private void InitializeAutoCombat()
         {
             Observable.Interval(TimeSpan.FromMilliseconds(333))
-                .Where(_ => (AttachedGame?.Status ?? GameStatus.Offline) == GameStatus.LoggedIn && AutoCombatEnabled)
+                .Where(_ => (attachedGame?.Status ?? GameStatus.Offline) == GameStatus.LoggedIn && AutoCombatEnabled)
                 .Where(_ => !lootedInLastLoop)
                 .Subscribe(_ => AutoCombatPerform());
         }
@@ -80,8 +73,8 @@ namespace Xy.PerfectWorld.ViewModels
         {
             try
             {
-                var character = new Character(AttachedGame.Game);
-                var mobs = new NpcContainer(AttachedGame.Game).GetItems()
+                var character = new Character(attachedGame.Game);
+                var mobs = new NpcContainer(attachedGame.Game).GetItems()
                     .Where(x => x.NpcType.Value == NpcType.Monster);
                 IEnumerable<Npc> targets = null; 
 
@@ -119,7 +112,7 @@ namespace Xy.PerfectWorld.ViewModels
         private void InitializeAutoLoot()
         {
             Observable.Interval(TimeSpan.FromMilliseconds(250))
-                .Where(_ => (AttachedGame?.Status ?? GameStatus.Offline) == GameStatus.LoggedIn && AutoLootEnabled)
+                .Where(_ => (attachedGame?.Status ?? GameStatus.Offline) == GameStatus.LoggedIn && AutoLootEnabled)
                 .Subscribe(_ => AutoLootPerform());
         }
         private void AutoLootPerform()
@@ -127,8 +120,8 @@ namespace Xy.PerfectWorld.ViewModels
             try
             {
                 const float MaxLootRange = 10.0f;
-                var canLootGold = new Character(AttachedGame.Game).Gold != 200000000;
-                var ground = new GroundContainer(AttachedGame.Game);
+                var canLootGold = new Character(attachedGame.Game).Gold != 200000000;
+                var ground = new GroundContainer(attachedGame.Game);
 
                 var item = ground.GetItems()
                     .Where(x => ShouldLoot(x, canLootGold))
@@ -195,16 +188,16 @@ namespace Xy.PerfectWorld.ViewModels
         private void InitializeStatusBar()
         {
             Observable.Interval(TimeSpan.FromMilliseconds(250))
-                .Where(_ => (AttachedGame?.Status ?? GameStatus.Offline) == GameStatus.LoggedIn)
+                .Where(_ => (attachedGame?.Status ?? GameStatus.Offline) == GameStatus.LoggedIn)
                 .Subscribe(_ => UpdateTarget());
             Observable.Interval(TimeSpan.FromMilliseconds(125))
-                .Where(_ => (AttachedGame?.Status ?? GameStatus.Offline) == GameStatus.LoggedIn)
+                .Where(_ => (attachedGame?.Status ?? GameStatus.Offline) == GameStatus.LoggedIn)
                 .Subscribe(_ => UpdateTargetInfo());
         }
         private void UpdateTarget()
         {
-            var character = new Character(AttachedGame.Game);
-            var npcs = new NpcContainer(AttachedGame.Game);
+            var character = new Character(attachedGame.Game);
+            var npcs = new NpcContainer(attachedGame.Game);
 
             currentTarget = npcs.GetItemByID(character.SelectedTargetID);
         }

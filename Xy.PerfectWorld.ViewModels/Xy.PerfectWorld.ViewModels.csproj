@@ -78,7 +78,6 @@
     <Compile Include="ClientSelectorViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SettingViewModel.Client.cs" />
     <Compile Include="SettingViewModel.AutoCombat.cs" />
     <Compile Include="SettingViewModel.cs" />
   </ItemGroup>

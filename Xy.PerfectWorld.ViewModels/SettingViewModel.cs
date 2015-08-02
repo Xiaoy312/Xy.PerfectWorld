@@ -12,11 +12,9 @@ namespace Xy.PerfectWorld.ViewModels
     {
         public SettingViewModel()
         {
-            InitializeClient();
             InitializeAutoCombat();
         }
-
-        partial void InitializeClient();
+        
         partial void InitializeAutoCombat();
     }
 }

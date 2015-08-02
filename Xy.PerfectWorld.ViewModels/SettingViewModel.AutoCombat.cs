@@ -51,17 +51,19 @@ namespace Xy.PerfectWorld.ViewModels
 
         partial void InitializeAutoCombat()
         {
+            var game = Locator.Current.GetService<GameModel>();
+
             SearchBehavior = AutoCombatSearchBehavior.SearchAndDestroy;
             NearbyMonsters = new ReactiveList<string>();
             TargetList = new ReactiveList<string>();
             TargetList.CountChanged.Subscribe(_ => TargetList.Sort());
 
-            var canRefreshNearbyMonsters = this.WhenAnyValue(x => x.SelectedGame, (GameModel x) => x != null);
+            var canRefreshNearbyMonsters = game.WhenAnyValue(x => x.Status, x => x == GameStatus.LoggedIn);
             RefreshNearbyMonsters = ReactiveCommand.CreateAsyncTask(canRefreshNearbyMonsters, async _ =>
                 {
                     var names = await Task.Run(() =>
                     {
-                        return new NpcContainer(SelectedGame.Game).GetItems()
+                        return new NpcContainer(game.Game).GetItems()
                             .Where(x => x.NpcType.Value == NpcType.Monster)
                             .Select(x => x.Name.Value.Value)
                             .Distinct();

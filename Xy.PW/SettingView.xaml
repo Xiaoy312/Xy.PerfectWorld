@@ -16,18 +16,6 @@
     </mah:MetroWindow.Resources>
     <mah:MetroContentControl Padding="5">
         <mah:MetroAnimatedSingleRowTabControl>
-            <TabItem Header="Client">
-                <DataGrid AutoGenerateColumns="False"
-                          IsReadOnly="True"
-                          ItemsSource="{Binding RunningGames}"
-                          SelectedValue="{Binding SelectedGame}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Process.Id}" Header="PID" />
-                        <DataGridTextColumn Binding="{Binding Status}" Header="GameStatus" />
-                        <DataGridTextColumn Binding="{Binding Player}" Header="Player" />
-                    </DataGrid.Columns>
-                </DataGrid>
-            </TabItem>
             <TabItem Header="AutoCombat">
                 <StackPanel>
                     <RadioButton Content="Search and destroy" IsChecked="{Binding SearchBehavior, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:AutoCombatSearchBehavior.SearchAndDestroy}}" />

@@ -90,7 +90,7 @@ namespace Xy.PerfectWorld.ViewModels
                 using (var stream = dialog.OpenFile())
                     serializer.Serialize(stream, TargetList.ToList());
             });
-            ExportTargetList.ThrownExceptions.Subscribe(dialogService.DisplayExceptionOn<SettingViewModel>);
+            ExportTargetList.ThrownExceptions.Subscribe(async e => await dialogService.DisplayExceptionAsyncOn<SettingViewModel>(e));
 
             ImportTargetList = ReactiveCommand.CreateAsyncTask(async _ =>
             {
@@ -100,7 +100,7 @@ namespace Xy.PerfectWorld.ViewModels
                 if (TargetList.Any())
                 {
                     // FIXME: Lord forgive me, for I've broken MVVM
-                    var result = await dialogService.ShowMessageDialogOnAsync<SettingViewModel>("Confirmation",
+                    var result = await dialogService.ShowMessageDialogAsyncOn<SettingViewModel>("Confirmation",
                         "Do you wish to merge the current list with this list?",
                         "Merge them",
                         "Keep new list",
@@ -126,7 +126,7 @@ namespace Xy.PerfectWorld.ViewModels
                             TargetList.Add(item);
                 }
             });
-            ImportTargetList.ThrownExceptions.Subscribe(dialogService.DisplayExceptionOn<SettingViewModel>);
+            ImportTargetList.ThrownExceptions.Subscribe(async e => await dialogService.DisplayExceptionAsyncOn<SettingViewModel>(e));
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         }
 

@@ -8,9 +8,9 @@ namespace Xy.PerfectWorld.Services
 {
     public interface IDialogService
     {
-        void DisplayExceptionOn<TViewModel>(TViewModel typeProvider, Exception e) where TViewModel : class;
-        void DisplayExceptionOn<TViewModel>(Exception e) where TViewModel : class;
-        Task<DialogResult> ShowMessageDialogOnAsync<TViewModel>(string title, string message,
+        Task DisplayExceptionAsyncOn<TViewModel>(TViewModel typeProvider, Exception e) where TViewModel : class;
+        Task DisplayExceptionAsyncOn<TViewModel>(Exception e) where TViewModel : class;
+        Task<DialogResult> ShowMessageDialogAsyncOn<TViewModel>(string title, string message,
             string affirmativeButtonText = null,
             string negativeButtonText = null,
             string firstAuxiliaryButtonText = null,

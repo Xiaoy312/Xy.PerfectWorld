@@ -14,14 +14,14 @@ namespace Xy.PW.ServicesProviders
 {
     public class DialogServiceProvider : IDialogService
     {
-        public void DisplayExceptionOn<TViewModel>(TViewModel typeProvider, Exception e) where TViewModel : class
+        public Task DisplayExceptionAsyncOn<TViewModel>(TViewModel typeProvider, Exception e) where TViewModel : class
         {
-            DisplayExceptionOn<TViewModel>(e);
+            return DisplayExceptionAsyncOn<TViewModel>(e);
         }
-        public async void DisplayExceptionOn<TViewModel>(Exception e) where TViewModel : class
+        public Task DisplayExceptionAsyncOn<TViewModel>(Exception e) where TViewModel : class
         {
             var window = Application.Current.Windows.OfType<IViewFor<TViewModel>>().SingleOrDefault() as MetroWindow;
-            await window.ShowMessageAsync(
+            return window.ShowMessageAsync(
                 e.GetType().Name,
                 e.Message + "\n" + e.StackTrace,
                 MessageDialogStyle.Affirmative,
@@ -29,10 +29,11 @@ namespace Xy.PW.ServicesProviders
                 {
                     AffirmativeButtonText = "...",
                     ColorScheme = MetroDialogColorScheme.Inverted
-                });            
+                })
+                .ContinueWith(task => { });
         }
 
-        public Task<DialogResult> ShowMessageDialogOnAsync<TViewModel>(string title, string message, 
+        public Task<DialogResult> ShowMessageDialogAsyncOn<TViewModel>(string title, string message, 
             string affirmativeButtonText = "OK", string negativeButtonText = null, 
             string firstAuxiliaryButtonText = null, string secondAuxiliaryButtonText = null) where TViewModel : class
         {
@@ -50,7 +51,7 @@ namespace Xy.PW.ServicesProviders
                     FirstAuxiliaryButtonText = firstAuxiliaryButtonText,
                     SecondAuxiliaryButtonText = secondAuxiliaryButtonText,
                 })
-                .ContinueWith(x => (DialogResult)x.Result);
+                .ContinueWith(task => (DialogResult)task.Result);
         }
     }
 }

@@ -118,8 +118,8 @@
                             </DataGrid>
                             <Button Grid.Column="0"
                                     Grid.Row="2"
-                                    Content="Refresh nearby target" 
-                                    Command="{Binding RefreshNearbyMonsters}"/>
+                                    Content="Refresh nearby target"
+                                    Command="{Binding RefreshNearbyMonsters}" />
                             <Button Grid.Column="1"
                                     Grid.Row="2"
                                     Content="Clear Target List"
@@ -140,6 +140,51 @@
                         </Grid>
                     </Expander>
                 </StackPanel>
+            </TabItem>
+            <TabItem Header="Features">
+                <Grid>
+                    <Grid.Resources>
+                        <Style x:Key="FeatureStateCheckBoxStyle"
+                               TargetType="CheckBox"
+                               BasedOn="{StaticResource MetroCheckBox}">
+                            <Setter Property="IsEnabled" Value="False" />
+                            <Setter Property="IsThreeState" Value="True" />
+                            <Setter Property="Margin" Value="10, 5" />
+                            <Style.Triggers>
+                                <Trigger Property="IsChecked" Value="{x:Null}">
+                                    <Setter Property="Content" Value="Unavailable" />
+                                </Trigger>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Content" Value="Enabled" />
+                                </Trigger>
+                                <Trigger Property="IsChecked" Value="False">
+                                    <Setter Property="Content" Value="Disabled" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Resources>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Column="0"
+                           Grid.Row="0"
+                           Content="Unfreeze :" />
+                    <CheckBox Grid.Column="1"
+                              Grid.Row="0"
+                              IsChecked="{Binding Unfreeze,
+                                                  Mode=OneWay}"
+                              Style="{StaticResource FeatureStateCheckBoxStyle}" />
+                    <Button Grid.Column="2"
+                            Grid.Row="0"
+                            Content="Toggle"
+                            Command="{Binding ToggleUnfreeze}" />
+                </Grid>
             </TabItem>
         </mah:MetroAnimatedSingleRowTabControl>
     </mah:MetroContentControl>

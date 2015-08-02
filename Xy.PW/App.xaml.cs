@@ -12,6 +12,8 @@ using Xy.PerfectWorld.ViewModels;
 using ReactiveUI;
 using Splat;
 using Xy.PerfectWorld.Services;
+using System.Diagnostics;
+using Xy.PerfectWorld.Models;
 
 namespace Xy.PW
 {
@@ -30,6 +32,9 @@ namespace Xy.PW
             BuildVersionCheck();
             LicenseValidation();
             AdministrativeRightsCheck();
+
+            if (!AttachToClient())
+                Shutdown();
 
             AppBootstrapper.Initialize();
             AppBootstrapper.Run();
@@ -66,6 +71,30 @@ namespace Xy.PW
                 MessageBox.Show("XyPW requires administrative rights to work. Please restart as admin.", this.GetType().Namespace, MessageBoxButton.OK, MessageBoxImage.Information);
                 Shutdown();
             }
+        }
+        /// <summary>
+        /// Attach to a single instance of client
+        /// </summary>
+        /// <returns>If a client is chosen and attached</returns>
+        private bool AttachToClient()
+        {
+            try
+            {
+                var client = Process.GetProcessesByName("elementclient").Single();
+                var game = new GameModel(client);
+
+                Locator.CurrentMutable.RegisterConstant(game, typeof(GameModel));
+            }
+            catch // when there is 0 client or more than 1 clients running, wait for the 1st or let the user decide
+            {
+                var viewModel = new ClientSelectorViewModel();
+                viewModel.Attach.Subscribe(game => Locator.CurrentMutable.RegisterConstant(game, typeof(GameModel)));
+
+                var view = new ClientSelectorView() { ViewModel = viewModel };
+                view.ShowDialog();
+            }
+
+            return Locator.Current.GetService<GameModel>() != null;
         }
 
         /// <summary>

@@ -13,6 +13,10 @@ namespace Xy.PW.ServicesProviders
 {
     public class ViewServiceProvider : IViewService
     {
+        public void ShowModalViewFor<T>() where T : class
+        {
+            
+        }
         public void ShowViewFor<T>() where T : class
         {
             var view = Locator.Current.GetService<IViewFor<T>>();

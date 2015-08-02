@@ -99,6 +99,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppBootstrapper.cs" />
+    <Compile Include="ClientSelectorView.xaml.cs">
+      <DependentUpon>ClientSelectorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\EnumToBooleanConverter.cs" />
     <Compile Include="License.cs" />
     <Compile Include="ServicesProviders\DialogServiceProvider.cs" />
@@ -106,6 +109,10 @@
       <DependentUpon>SettingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ServicesProviders\ViewServiceProvider.cs" />
+    <Page Include="ClientSelectorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Icons.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

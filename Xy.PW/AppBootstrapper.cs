@@ -46,12 +46,11 @@ namespace Xy.PW
             where TView : class, IViewFor<TViewModel>, new()
             where TViewModel : ReactiveObject, new()
         {
-            var viewModel = new TViewModel();
             Func<TView> viewFactory = () =>
                 Application.Current.Windows.OfType<TView>().FirstOrDefault() ?? 
-                new TView() { ViewModel = viewModel };
+                new TView() { ViewModel = resolver.GetService<TViewModel>() };
 
-            resolver.RegisterConstant(viewModel, viewModel.GetType());
+            resolver.RegisterConstant(new TViewModel(), typeof(TViewModel));
             resolver.Register(viewFactory, typeof(IViewFor<TViewModel>));
         }
     }

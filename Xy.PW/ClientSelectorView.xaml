@@ -1,0 +1,60 @@
+﻿<mah:MetroWindow x:Class="Xy.PW.ClientSelectorView"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:local="clr-namespace:Xy.PW"
+                 mc:Ignorable="d"
+                 Title="ClientSelectorView"
+                 Height="300"
+                 Width="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+
+
+        <DataGrid Grid.Row="1"
+                  x:Name="GameClientsDataGrid"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="False"
+                  ItemsSource="{Binding GameClients}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Process.Id}"
+                                    
+                                    Header="PID"
+                                    Width="Auto" />
+                <DataGridTextColumn Binding="{Binding Status}"
+                                    
+                                    Header="GameStatus"
+                                    Width="*" />
+                <DataGridTextColumn Binding="{Binding Player}"
+                                    
+                                    Header="Player"
+                                    Width="*" />
+                <DataGridTemplateColumn Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Command="{Binding DataContext.Attach,
+                                                      ElementName=GameClientsDataGrid}"
+                                    CommandParameter="{Binding}"
+                                    Style="{StaticResource ChromelessButtonStyle}">
+                                <Rectangle Width="15"
+                                           Height="15"
+                                           Fill="{Binding Path=Foreground,
+                                                          RelativeSource={RelativeSource AncestorType=Button}}">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Uniform" Visual="{StaticResource Needle}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</mah:MetroWindow>

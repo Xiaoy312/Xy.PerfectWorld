@@ -50,6 +50,7 @@ namespace Xy.PerfectWorld.Models
         public Pointer<byte> State { get { return SkillBase + 0x18; } }
 
         public Pointer InfoBase { get { return SkillBase + 0x4 + 0x4; } }
+        public Pointer<int> SkillID { get { return SkillBase + 0x4 + 0x4 + 0x4; } }
         /// <remarks>Apparently only skill description is localized, but not this</remarks>
         public Pointer<WString> Name { get { return SkillBase + 0x4 + 0x4 + 0xC; } }
         public Pointer<int> RequiredChi { get { return SkillBase + 0x4 + 0x4 + 0x36; } }
@@ -57,6 +58,7 @@ namespace Xy.PerfectWorld.Models
         public override string ToString()
         {
             return $"[{SkillBase.Value.ToString("X")}]" + string.Join(", "
+                   , $"{nameof(SkillID)} -> {SkillID.Value.ToString("X").PadLeft(3)}"
                    , $"{nameof(Cooldown)} -> {Cooldown.Value.ToString().PadLeft(7)}"
                    , $"{nameof(MaxCooldown)} -> {MaxCooldown.Value.ToString().PadLeft(7)}"
                    , $"{nameof(State)} -> {State.Value.ToString().PadLeft(3)}"

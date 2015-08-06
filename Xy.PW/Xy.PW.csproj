@@ -109,6 +109,12 @@
       <DependentUpon>SettingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ServicesProviders\ViewServiceProvider.cs" />
+    <Compile Include="SettingViews\AutoCombatView.xaml.cs">
+      <DependentUpon>AutoCombatView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingViews\FeaturesView.xaml.cs">
+      <DependentUpon>FeaturesView.xaml</DependentUpon>
+    </Compile>
     <Page Include="ClientSelectorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -130,6 +136,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="SettingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingViews\AutoCombatView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingViews\FeaturesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -7,13 +7,20 @@
              xmlns:vm="clr-namespace:Xy.PerfectWorld.ViewModels;assembly=Xy.PerfectWorld.ViewModels"
              xmlns:local="clr-namespace:Xy.PW.SettingViews"
              mc:Ignorable="d"
-             d:DesignHeight="300"
+             d:DesignHeight="450"
              d:DesignWidth="600">
-    <StackPanel>
-        <StackPanel.Resources>
+    <Grid>
+        <Grid.Resources>
             <converter:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
-        </StackPanel.Resources>
-        <GroupBox Header="Targeting Logics">
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <GroupBox Header="Targeting Logics"
+                  Grid.Row="0"
+                  Margin="0">
             <StackPanel>
                 <RadioButton Content="Search and destroy" IsChecked="{Binding SearchBehavior, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:AutoCombatSearchBehavior.SearchAndDestroy}}" />
                 <RadioButton Content="Self defence" IsChecked="{Binding SearchBehavior, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:AutoCombatSearchBehavior.SelfDefence}}" />
@@ -21,6 +28,7 @@
             </StackPanel>
         </GroupBox>
         <Expander Header="Custom Target"
+                  Grid.Row="2"
                   IsEnabled="{Binding SearchBehavior,
                                       Converter={StaticResource EnumToBooleanConverter},
                                       ConverterParameter={x:Static vm:AutoCombatSearchBehavior.Custom}}"
@@ -137,5 +145,5 @@
                         Style="{StaticResource AccentedSquareButtonStyle}" />
             </Grid>
         </Expander>
-    </StackPanel>
+    </Grid>
 </UserControl>

@@ -91,6 +91,7 @@ namespace Xy.PerfectWorld.Models
         public Pointer<int> MaxHP { get { return NpcBase + 0x154; } }
         public Pointer<WString> Name { get { return NpcBase + 0x230; } }
         public Pointer<float> RelativeDistance { get { return NpcBase + 0x254; } }
+        public Pointer<NpcState> State { get { return NpcBase + 0x294; } }
 
         public override string ToString()
         {
@@ -98,7 +99,7 @@ namespace Xy.PerfectWorld.Models
                    , $"{nameof(UniqueID)} -> {UniqueID.Value.ToString("X8")}"
                    , $"{nameof(NpcID)} -> {NpcID.Value.ToString("X4")}"
                    , $"{nameof(Level)} = {Level.Value.ToString().PadLeft(3)}"
-                   , $"{nameof(Name)} = {Name.Value}"
+                   , $"{nameof(State)} = {State.Value.ToString("X")}"
                    , $"{nameof(Name)} = {Name.Value}"
                 );
         }
@@ -107,5 +108,9 @@ namespace Xy.PerfectWorld.Models
     public enum NpcType
     {
         Monster = 6, Npc = 7, Pet = 9, GM = 10
+    }
+    public enum NpcState
+    {
+        Dead = 4
     }
 }

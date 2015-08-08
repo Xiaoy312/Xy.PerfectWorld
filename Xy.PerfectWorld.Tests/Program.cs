@@ -21,7 +21,8 @@ namespace Xy.PerfectWorld.Tests
 
             //DebugLoot();
             //DebugCurrentTarget();
-            DebugSkill();
+            //DebugSkill();
+            DebugNpc();
         }
 
         private static void DebugLoot()
@@ -100,6 +101,19 @@ namespace Xy.PerfectWorld.Tests
             foreach (var skill in skillbook.GetItems())
             {
                 Debug.WriteLine(skill);
+            }
+        }
+        private static void DebugNpc()
+        {
+            var character = new Character(game);
+            var npcs = new NpcContainer(game).GetItems();
+
+            var target = new NpcContainer(game).GetItemByID(character.SelectedTargetID);
+            Debug.WriteLine("*" + target);
+
+            foreach(var npc in npcs.OrderBy(x => x.RelativeDistance))
+            {
+                Debug.WriteLine(npc);
             }
         }
     }

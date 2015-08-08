@@ -29,7 +29,6 @@ namespace Xy.DataAnalysis
 
             return new Core(handle);
         }
-
         public float ReadFloat(int address)
         {
             float value = default(float);

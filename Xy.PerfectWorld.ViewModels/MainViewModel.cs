@@ -198,6 +198,9 @@ namespace Xy.PerfectWorld.ViewModels
                 case 0xC5A1: // G19 Ore
                 case 0xAD2D: // Breathe of Fire
                 case 0xAD15: // Devils Breathe
+                case 0xAD2E: // Quill of Ascendance
+                case 0xAD2C: // Powerful Force
+                case 0xAD4F: // Deteriated Skin
                 case 0xC6A6: // PvP Ore
                 
                 case 0xC5A2: // G20 Ore

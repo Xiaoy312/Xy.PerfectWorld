@@ -25,6 +25,14 @@ namespace Xy.PerfectWorld.ViewModels
             set { this.RaiseAndSetIfChanged(ref autoCombatEnabled, value); }
         }
         #endregion
+        #region public bool AutoSparkEnabled
+        private bool m_AutoSparkEnabled;
+        public bool AutoSparkEnabled
+        {
+            get { return m_AutoSparkEnabled; }
+            set { this.RaiseAndSetIfChanged(ref m_AutoSparkEnabled, value); }
+        }
+        #endregion
         #region AutoLootEnabled
         bool autoLootEnabled = false;
         public bool AutoLootEnabled
@@ -76,9 +84,9 @@ namespace Xy.PerfectWorld.ViewModels
                 var character = new Character(attachedGame.Game);
                 var mobs = new NpcContainer(attachedGame.Game).GetItems()
                     .Where(x => x.NpcType.Value == NpcType.Monster);
-                IEnumerable<Npc> targets = null; 
+                IEnumerable<Npc> targets = null;
 
-                switch(settingVM.SearchBehavior)
+                switch (settingVM.SearchBehavior)
                 {
                     case AutoCombatSearchBehavior.SearchAndDestroy:
                         targets = mobs;
@@ -101,7 +109,12 @@ namespace Xy.PerfectWorld.ViewModels
                     mob.Target();
 
                 if (character.SelectedTargetID != 0)
-                    character.Attack();
+                {
+                    if (AutoSparkEnabled && character.Chi > 300)
+                        Call.Cast(attachedGame.Game.Core, 0x16B);
+                    else
+                        character.Attack();
+                }
             }
             catch (Exception e)
             {

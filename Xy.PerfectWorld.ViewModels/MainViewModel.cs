@@ -180,10 +180,10 @@ namespace Xy.PerfectWorld.ViewModels
                 case 0x5285: // Martial God·Removal Stone
                 case 0x5286: // Martial God·Guanyin Stele
                 case 0x5287: // Martial God·Guanyin Stone
-
+                
                 case 0xD6D9: // g17 Ember
                 case 0xD6DA: // g17 Pearl
-
+                
                 case 0x662C: // Raw Crystal
                 case 0x64DC: // Rapture Crystal
                 case 0x64DD: // Uncanny Crystal
@@ -192,6 +192,17 @@ namespace Xy.PerfectWorld.ViewModels
                 case 0xAD27: // Mystic Fiber
                 case 0xAD28: // Purify Crystal
                 case 0xC5A0: // G18 Ore
+                case 0xAD29: // Dark Soul
+                case 0xD6DB: // g18 Opal
+                
+                case 0xC5A1: // G19 Ore
+                case 0xAD2D: // Breathe of Fire
+                case 0xAD15: // Devils Breathe
+                case 0xC6A6: // PvP Ore
+                
+                case 0xC5A2: // G20 Ore
+                case 0xC477: // Supreme Logs
+                case 0x1FB0: // Mystical Blood
                     return true;
             }
 

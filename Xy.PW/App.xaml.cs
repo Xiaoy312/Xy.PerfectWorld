@@ -47,7 +47,7 @@ namespace Xy.PW
         private void BuildVersionCheck()
         {
 #if DEBUG
-            if (Environment.UserName != "Xiaoy")
+            if (!Debugger.IsAttached)
             {
                 MessageBox.Show("Please contact your administrator.", "Incorrect Software Version", MessageBoxButton.OK, MessageBoxImage.Information);
                 Shutdown();
@@ -56,7 +56,7 @@ namespace Xy.PW
         }
         private void LicenseValidation()
         {
-            if (Environment.UserName != "Xiaoy" && !License.CheckLicense())
+            if (!Debugger.IsAttached && !License.CheckLicense())
             {
                 var hwid = License.GetHardwareID();
                 Clipboard.SetText(hwid);

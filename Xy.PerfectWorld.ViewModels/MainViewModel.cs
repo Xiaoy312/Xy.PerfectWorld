@@ -111,9 +111,19 @@ namespace Xy.PerfectWorld.ViewModels
                 if (character.SelectedTargetID != 0)
                 {
                     if (AutoSparkEnabled && character.Chi > 300)
-                        Call.Cast(attachedGame.Game.Core, 0x16B);
-                    else
-                        character.Attack();
+                    {
+                        var sparkBurstID = new SkillBook(attachedGame.Game).GetItems()
+                            .Select(x => x.SkillID.Value)
+                            .FirstOrDefault(x => 0x16A <= x && x <= 0x175); // skill id for holy/demonic spark burst
+
+                        if (sparkBurstID != default(int))
+                        {
+                            Call.Cast(attachedGame.Game.Core, sparkBurstID);
+                            return;
+                        }
+                    }
+
+                    character.Attack();
                 }
             }
             catch (Exception e)

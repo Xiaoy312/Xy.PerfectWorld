@@ -1,11 +1,11 @@
 ﻿<mah:MetroWindow x:Class="Xy.PW.SettingView"
                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
-                 xmlns:settingViews="clr-namespace:Xy.PW.SettingViews"
                  xmlns:local="clr-namespace:Xy.PW"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:settingViews="clr-namespace:Xy.PW.SettingViews"
                  x:Name="Setting"
                  Title="Setting"
                  mc:Ignorable="d"
@@ -15,6 +15,9 @@
         <mah:MetroAnimatedSingleRowTabControl>
             <TabItem Header="AutoCombat">
                 <settingViews:AutoCombatView />
+            </TabItem>
+            <TabItem Header="AutoLoot">
+                <settingViews:AutoLootView />
             </TabItem>
             <TabItem Header="Features">
                 <settingViews:FeaturesView />

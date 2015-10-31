@@ -25,9 +25,11 @@ namespace Xy.PerfectWorld.ViewModels
 
             InitializeAutoCombat();
             InitializeFeatures();
+            InitializeAutoLoot();
         }
         
         partial void InitializeAutoCombat();
         partial void InitializeFeatures();
+        partial void InitializeAutoLoot();
     }
 }

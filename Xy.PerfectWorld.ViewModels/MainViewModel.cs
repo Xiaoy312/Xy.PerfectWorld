@@ -25,6 +25,14 @@ namespace Xy.PerfectWorld.ViewModels
             set { this.RaiseAndSetIfChanged(ref autoCombatEnabled, value); }
         }
         #endregion
+        #region public bool AutoSparkEnabled
+        private bool m_AutoSparkEnabled;
+        public bool AutoSparkEnabled
+        {
+            get { return m_AutoSparkEnabled; }
+            set { this.RaiseAndSetIfChanged(ref m_AutoSparkEnabled, value); }
+        }
+        #endregion
         #region AutoLootEnabled
         bool autoLootEnabled = false;
         public bool AutoLootEnabled
@@ -76,9 +84,9 @@ namespace Xy.PerfectWorld.ViewModels
                 var character = new Character(attachedGame.Game);
                 var mobs = new NpcContainer(attachedGame.Game).GetItems()
                     .Where(x => x.NpcType.Value == NpcType.Monster);
-                IEnumerable<Npc> targets = null; 
+                IEnumerable<Npc> targets = null;
 
-                switch(settingVM.SearchBehavior)
+                switch (settingVM.SearchBehavior)
                 {
                     case AutoCombatSearchBehavior.SearchAndDestroy:
                         targets = mobs;
@@ -101,7 +109,22 @@ namespace Xy.PerfectWorld.ViewModels
                     mob.Target();
 
                 if (character.SelectedTargetID != 0)
+                {
+                    if (AutoSparkEnabled && character.Chi > 300)
+                    {
+                        var sparkBurstID = new SkillBook(attachedGame.Game).GetItems()
+                            .Select(x => x.SkillID.Value)
+                            .FirstOrDefault(x => 0x16A <= x && x <= 0x175); // skill id for holy/demonic spark burst
+
+                        if (sparkBurstID != default(int))
+                        {
+                            Call.Cast(attachedGame.Game.Core, sparkBurstID);
+                            return;
+                        }
+                    }
+
                     character.Attack();
+                }
             }
             catch (Exception e)
             {
@@ -123,11 +146,13 @@ namespace Xy.PerfectWorld.ViewModels
                 var canLootGold = new Character(attachedGame.Game).Gold != 200000000;
                 var ground = new GroundContainer(attachedGame.Game);
 
-                var item = ground.GetItems()
-                    .Where(x => ShouldLoot(x, canLootGold))
-                    .Where(x => x.RelativeDistance <= MaxLootRange)
-                    .OrderBy(x => x.RelativeDistance)
-                    .FirstOrDefault();
+                GroundItem item;
+                lock (settingVM.LootInfos)
+                    item = ground.GetItems()
+                        .Where(x => ShouldLoot(x, canLootGold))
+                        .Where(x => x.RelativeDistance <= MaxLootRange)
+                        .OrderBy(x => x.RelativeDistance)
+                        .FirstOrDefault();
 
                 if (item != null)
                 {
@@ -145,44 +170,11 @@ namespace Xy.PerfectWorld.ViewModels
         {
             switch (item.CollectMethod.Value)
             {
-                case CollectMethod.Gold: return canLootGold;
+                case CollectMethod.Gold: return settingVM.LootGold && canLootGold;
                 case CollectMethod.Resource: return false;
             }
 
-            switch (item.ItemID.Value)
-            {
-                case 0x5DC0: // LM$ Silver
-
-                case 0x527A: // Martial God·Ksitigarbha Stele
-                case 0x527B: // Martial God·Ksitigarbha Stone
-                case 0x527C: // Martial God·Steel Stele
-                case 0x527D: // Martial God·Steel Stone
-                case 0x527E: // Martial God·Virtuous Stele
-                case 0x527F: // Martial God·Virtuous Stone
-                case 0x5280: // Martial God·Manjushri Stele
-                case 0x5281: // Martial God·Manjushri Stone
-                case 0x5282: // Martial God·Hollow Stele
-                case 0x5283: // Martial God·Hollow Stone
-                case 0x5284: // Martial God·Removal Stele
-                case 0x5285: // Martial God·Removal Stone
-                case 0x5286: // Martial God·Guanyin Stele
-                case 0x5287: // Martial God·Guanyin Stone
-
-                case 0xD6D9: // g17 Ember
-                case 0xD6DA: // g17 Pearl
-
-                case 0x662C: // Raw Crystal
-                case 0x64DC: // Rapture Crystal
-                case 0x64DD: // Uncanny Crystal
-                case 0x6610: // Soul Crystal
-                case 0xAD50: // Beast Blood
-                case 0xAD27: // Mystic Fiber
-                case 0xAD28: // Purify Crystal
-                case 0xC5A0: // G18 Ore
-                    return true;
-            }
-
-            return false;
+            return settingVM.LootInfos.Any(x => x.ItemID == item.ItemID);
         }
 
         private void InitializeStatusBar()
@@ -213,7 +205,7 @@ namespace Xy.PerfectWorld.ViewModels
             }
 
             var maxHP = target.MaxHP;
-            
+
             TargetInfo = string.Format("Target: {0:P2} {1:N0}",
                 maxHP != 0 ? (double)target.HP.Value / target.MaxHP.Value : 0,
                 target.HP.Value);

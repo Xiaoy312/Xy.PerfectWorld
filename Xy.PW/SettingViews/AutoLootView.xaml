@@ -1,0 +1,150 @@
+﻿<UserControl x:Class="Xy.PW.SettingViews.AutoLootView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converter="clr-namespace:Xy.PW.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Xy.PW.SettingViews"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Xy.PerfectWorld.ViewModels;assembly=Xy.PerfectWorld.ViewModels"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="600">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <GroupBox Grid.Row="0"
+                  Margin="0,0,0,10"
+                  Header="AutoLoot Logics">
+            <StackPanel>
+                <CheckBox Content="Loot Gold" IsChecked="{Binding LootGold}" />
+            </StackPanel>
+        </GroupBox>
+
+        <Expander Grid.Row="1"
+                  IsExpanded="True"
+                  Header="Customization">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0"
+                       Grid.Column="0"
+                       Content="Nearby loots : " />
+                <Label Grid.Row="0"
+                       Grid.Column="1"
+                       Content="Loot List : " />
+
+                <DataGrid x:Name="NearbyLootInfoDataGrid"
+                          Grid.Row="1"
+                          Grid.Column="0"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          ItemsSource="{Binding NearbyLootInfos}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="Auto"
+                                            Header="ID"
+                                            Binding="{Binding ItemID}" />
+                        <DataGridTextColumn Width="*"
+                                            SortDirection="Ascending"
+                                            Header="Name"
+                                            Binding="{Binding Name}" />
+                        <DataGridTemplateColumn Width="Auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding DataContext.AddLootInfo,
+                                                              ElementName=NearbyLootInfoDataGrid}"
+                                            CommandParameter="{Binding}"
+                                            Style="{StaticResource ChromelessButtonStyle}"
+                                            ToolTip="Add to loot list">
+                                        <Rectangle Width="15"
+                                                   Height="15"
+                                                   Fill="{Binding Path=Foreground,
+                                                                  RelativeSource={RelativeSource AncestorType=Button}}">
+                                            <Rectangle.OpacityMask>
+                                                <VisualBrush Stretch="Uniform" Visual="{StaticResource Plus}" />
+                                            </Rectangle.OpacityMask>
+                                        </Rectangle>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <DataGrid x:Name="LootInfoDataGrid"
+                          Grid.Row="1"
+                          Grid.Column="1"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          ItemsSource="{Binding LootInfos}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="Auto"
+                                            Header="ID"
+                                            Binding="{Binding ItemID}" />
+                        <DataGridTextColumn Width="*"
+                                            SortDirection="Ascending"
+                                            Header="Name"
+                                            Binding="{Binding Name}" />
+                        <DataGridTemplateColumn Width="Auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding DataContext.RemoveLootInfo,
+                                                              ElementName=LootInfoDataGrid}"
+                                            CommandParameter="{Binding}"
+                                            Style="{StaticResource ChromelessButtonStyle}"
+                                            ToolTip="Remove from loot list">
+                                        <Rectangle Width="15"
+                                                   Height="15"
+                                                   Fill="{Binding Path=Foreground,
+                                                                  RelativeSource={RelativeSource AncestorType=Button}}">
+                                            <Rectangle.OpacityMask>
+                                                <VisualBrush Stretch="Uniform" Visual="{StaticResource Minus}" />
+                                            </Rectangle.OpacityMask>
+                                        </Rectangle>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <Button Grid.Row="2"
+                        Grid.Column="0"
+                        Command="{Binding RefreshNearbyLootInfos}"
+                        Content="Refresh nearby loot"
+                        Style="{StaticResource AccentedSquareButtonStyle}" />
+                <Button Grid.Row="2"
+                        Grid.Column="1"
+                        Command="{Binding ClearLootInfos}"
+                        Content="Clear loot list"
+                        Style="{StaticResource AccentedSquareButtonStyle}" />
+
+                <Separator Grid.Row="3"
+                           Grid.ColumnSpan="2"
+                           Margin="20, 5" />
+
+                <Button Grid.Row="4"
+                        Grid.Column="0"
+                        Command="{Binding ExportLootInfos}"
+                        Content="Export"
+                        Style="{StaticResource AccentedSquareButtonStyle}" />
+                <Button Grid.Row="4"
+                        Grid.Column="1"
+                        Command="{Binding ImportLootInfos}"
+                        Content="Import"
+                        Style="{StaticResource AccentedSquareButtonStyle}" />
+            </Grid>
+        </Expander>
+    </Grid>
+</UserControl>

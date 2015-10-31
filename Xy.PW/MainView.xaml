@@ -47,51 +47,58 @@
         </mah:WindowCommands>
     </mah:MetroWindow.RightWindowCommands>
 
-    <mah:MetroContentControl>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="0" Orientation="Horizontal">
-                <StackPanel.Resources>
-                    <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
-                        <Setter Property="Margin" Value="10 0 10 0" />
-                    </Style>
-                </StackPanel.Resources>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <StackPanel.Resources>
+                <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+                    <Setter Property="Margin" Value="0 0 10 0" />
+                </Style>
+            </StackPanel.Resources>
 
-                <CheckBox Content="AC" IsChecked="{Binding AutoCombatEnabled}">
-                    <CheckBox.ToolTip>
-                        <TextBlock>
-                            <Run FontWeight="Bold">Auto-Combat</Run>
-                            <LineBreak />
-                            <Run>Automatically acquire target and attack it</Run>
-                        </TextBlock>
-                    </CheckBox.ToolTip>
-                </CheckBox>
-                <CheckBox Content="AL" IsChecked="{Binding AutoLootEnabled}">
-                    <CheckBox.ToolTip>
-                        <TextBlock>
-                            <Run FontWeight="Bold">Auto-Loot</Run>
-                            <LineBreak />
-                            <Run>Automatically loot any valuable within range</Run>
-                            <LineBreak />
-                            <LineBreak />
-                            <Run FontStyle="Italic">Only works on gold currently</Run>
-                        </TextBlock>
-                    </CheckBox.ToolTip>
-                </CheckBox>
-            </StackPanel>
+            <CheckBox Content="AC" IsChecked="{Binding AutoCombatEnabled}">
+                <CheckBox.ToolTip>
+                    <TextBlock>
+                        <Run FontWeight="Bold">Auto-Combat</Run>
+                        <LineBreak />
+                        <Run>Automatically acquire target and attack it</Run>
+                    </TextBlock>
+                </CheckBox.ToolTip>
+            </CheckBox>
+            <CheckBox Content="AS" IsChecked="{Binding AutoSparkEnabled}">
+                <CheckBox.ToolTip>
+                    <TextBlock>
+                        <Run FontWeight="Bold">Auto-Spark</Run>
+                        <LineBreak />
+                        <Run>Spark on 3chi</Run>
+                    </TextBlock>
+                </CheckBox.ToolTip>
+            </CheckBox>
+            <CheckBox Content="AL" IsChecked="{Binding AutoLootEnabled}">
+                <CheckBox.ToolTip>
+                    <TextBlock>
+                        <Run FontWeight="Bold">Auto-Loot</Run>
+                        <LineBreak />
+                        <Run>Automatically loot any valuable within range</Run>
+                        <LineBreak />
+                        <LineBreak />
+                        <Run FontStyle="Italic">Only works on gold currently</Run>
+                    </TextBlock>
+                </CheckBox.ToolTip>
+            </CheckBox>
+        </StackPanel>
 
-            <StatusBar Grid.Row="1">
-                <StatusBar.Resources>
-                    <Style TargetType="StatusBarItem" BasedOn="{StaticResource {x:Type StatusBarItem}}">
-                        <Setter Property="FontSize" Value="10" />
-                    </Style>
-                </StatusBar.Resources>
-                <StatusBarItem Content="{Binding TargetInfo}" />
-            </StatusBar>
-        </Grid>
-    </mah:MetroContentControl>
+        <StatusBar Grid.Row="1">
+            <StatusBar.Resources>
+                <Style TargetType="StatusBarItem" BasedOn="{StaticResource {x:Type StatusBarItem}}">
+                    <Setter Property="FontSize" Value="10" />
+                </Style>
+            </StatusBar.Resources>
+            <StatusBarItem Content="{Binding TargetInfo}" />
+        </StatusBar>
+    </Grid>
 </mah:MetroWindow>

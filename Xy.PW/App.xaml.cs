@@ -7,6 +7,7 @@ using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Reactive.Disposables;
 using System.Xml.Linq;
 using Xy.PerfectWorld.ViewModels;
 using ReactiveUI;
@@ -78,20 +79,27 @@ namespace Xy.PW
         /// <returns>If a client is chosen and attached</returns>
         private bool AttachToClient()
         {
-            try
+            var clients = Process.GetProcessesByName("elementclient");
+            if (clients.Count() == 1)
             {
-                var client = Process.GetProcessesByName("elementclient").Single();
+                var client = clients.Single();
                 var game = new GameModel(client);
 
                 Locator.CurrentMutable.RegisterConstant(game, typeof(GameModel));
             }
-            catch // when there is 0 client or more than 1 clients running, wait for the 1st or let the user decide
+            else
             {
-                var viewModel = new ClientSelectorViewModel();
-                viewModel.Attach.Subscribe(game => Locator.CurrentMutable.RegisterConstant(game, typeof(GameModel)));
+                // temporarily preventing the app from shutting down when last window closes
+                var mode = ShutdownMode;
+                ShutdownMode = ShutdownMode.OnExplicitShutdown;
+                using (Disposable.Create(() => ShutdownMode = mode))
+                {
+                    var viewModel = new ClientSelectorViewModel();
+                    viewModel.Attach.Subscribe(game => Locator.CurrentMutable.RegisterConstant(game, typeof(GameModel)));
 
-                var view = new ClientSelectorView() { ViewModel = viewModel };
-                view.ShowDialog();
+                    var view = new ClientSelectorView() { ViewModel = viewModel };
+                    view.ShowDialog();
+                }
             }
 
             return Locator.Current.GetService<GameModel>() != null;

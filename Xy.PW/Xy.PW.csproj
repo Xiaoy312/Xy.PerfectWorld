@@ -112,6 +112,9 @@
     <Compile Include="SettingViews\AutoCombatView.xaml.cs">
       <DependentUpon>AutoCombatView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SettingViews\AutoLootView.xaml.cs">
+      <DependentUpon>AutoLootView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SettingViews\FeaturesView.xaml.cs">
       <DependentUpon>FeaturesView.xaml</DependentUpon>
     </Compile>
@@ -140,6 +143,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SettingViews\AutoCombatView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingViews\AutoLootView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

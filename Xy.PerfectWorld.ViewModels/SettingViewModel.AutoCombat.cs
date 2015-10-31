@@ -99,7 +99,6 @@ namespace Xy.PerfectWorld.ViewModels
 
                 if (TargetList.Any())
                 {
-                    // FIXME: Lord forgive me, for I've broken MVVM
                     var result = await dialogService.ShowMessageDialogAsyncOn<SettingViewModel>("Confirmation",
                         "Do you wish to merge the current list with this list?",
                         "Merge them",

@@ -78,12 +78,18 @@
     <Compile Include="ClientSelectorViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="SettingViewModel.Features.cs" />
     <Compile Include="SettingViewModel.AutoCombat.cs" />
     <Compile Include="SettingViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Compile Include="SettingViewModel.AutoLoot.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Xy.DataAnalysis\Xy.DataAnalysis.csproj">
@@ -98,6 +104,12 @@
       <Project>{e5c08ab4-4e18-41a2-b8be-dc6b61cfb719}</Project>
       <Name>Xy.PerfectWorld.Services</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

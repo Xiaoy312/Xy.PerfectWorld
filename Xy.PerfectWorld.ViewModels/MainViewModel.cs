@@ -146,11 +146,13 @@ namespace Xy.PerfectWorld.ViewModels
                 var canLootGold = new Character(attachedGame.Game).Gold != 200000000;
                 var ground = new GroundContainer(attachedGame.Game);
 
-                var item = ground.GetItems()
-                    .Where(x => ShouldLoot(x, canLootGold))
-                    .Where(x => x.RelativeDistance <= MaxLootRange)
-                    .OrderBy(x => x.RelativeDistance)
-                    .FirstOrDefault();
+                GroundItem item;
+                lock (settingVM.LootInfos)
+                    item = ground.GetItems()
+                        .Where(x => ShouldLoot(x, canLootGold))
+                        .Where(x => x.RelativeDistance <= MaxLootRange)
+                        .OrderBy(x => x.RelativeDistance)
+                        .FirstOrDefault();
 
                 if (item != null)
                 {
@@ -168,59 +170,11 @@ namespace Xy.PerfectWorld.ViewModels
         {
             switch (item.CollectMethod.Value)
             {
-                case CollectMethod.Gold: return canLootGold;
+                case CollectMethod.Gold: return settingVM.LootGold && canLootGold;
                 case CollectMethod.Resource: return false;
             }
 
-            switch (item.ItemID.Value)
-            {
-                case 0x5DC0: // LM$ Silver
-
-                case 0x527A: // Martial God·Ksitigarbha Stele
-                case 0x527B: // Martial God·Ksitigarbha Stone
-                case 0x527C: // Martial God·Steel Stele
-                case 0x527D: // Martial God·Steel Stone
-                case 0x527E: // Martial God·Virtuous Stele
-                case 0x527F: // Martial God·Virtuous Stone
-                case 0x5280: // Martial God·Manjushri Stele
-                case 0x5281: // Martial God·Manjushri Stone
-                case 0x5282: // Martial God·Hollow Stele
-                case 0x5283: // Martial God·Hollow Stone
-                case 0x5284: // Martial God·Removal Stele
-                case 0x5285: // Martial God·Removal Stone
-                case 0x5286: // Martial God·Guanyin Stele
-                case 0x5287: // Martial God·Guanyin Stone
-                
-                case 0xD6D9: // g17 Ember
-                case 0xD6DA: // g17 Pearl
-
-                case 0x64DC: // Rapture Crystal
-                case 0x64DD: // Uncanny Crystal
-                case 0x6610: // Soul Crystal
-                case 0x662C: // Raw Crystal
-                case 0xAD27: // Mystic Fiber
-                case 0xAD28: // Purify Crystal
-                case 0xAD29: // Dark Soul
-                case 0xAD50: // Beast Blood
-                case 0xC5A0: // G18 Ore
-                case 0xD6DB: // g18 Opal
-
-                case 0xAD15: // Devils Breathe
-                case 0xAD2B: // Ancient Prism
-                case 0xAD2C: // Powerful Force
-                case 0xAD2D: // Breathe of Fire
-                case 0xAD2E: // Quill of Ascendance
-                case 0xAD4F: // Deteriated Skin
-                case 0xC5A1: // G19 Ore
-                case 0xC6A6: // PvP Ore
-
-                case 0x1FB0: // Mystical Blood
-                case 0xC477: // Supreme Logs
-                case 0xC5A2: // G20 Ore
-                    return true;
-            }
-
-            return false;
+            return settingVM.LootInfos.Any(x => x.ItemID == item.ItemID);
         }
 
         private void InitializeStatusBar()
@@ -251,7 +205,7 @@ namespace Xy.PerfectWorld.ViewModels
             }
 
             var maxHP = target.MaxHP;
-            
+
             TargetInfo = string.Format("Target: {0:P2} {1:N0}",
                 maxHP != 0 ? (double)target.HP.Value / target.MaxHP.Value : 0,
                 target.HP.Value);
